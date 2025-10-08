@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C4 - Études de Cas Java (Exceptions et I/O)</title>
+    <style>
+        /* Base Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        h1 {
+            color: #6a0dad; /* Nouvelle couleur pour C4 (Pourpre) */
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Level Toggle Buttons */
+        .level-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .level-btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            transition: all 0.2s;
+        }
+        .level-btn:hover {
+            border-color: #9933ff;
+            color: #9933ff;
+        }
+        .level-btn.active {
+            background-color: #6a0dad;
+            color: #fff;
+            border-color: #6a0dad;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Exercise Card */
+        .exercise-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .exercise-card h3 {
+            font-size: 1.5rem;
+            color: #6a0dad; /* Couleur C4 */
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .exercise-card p.criteria {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Solution/Code Block */
+        .solution-toggle {
+            display: block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #f7f0ff;
+            color: #6a0dad;
+            border: 1px solid #d9c7ff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .solution-toggle:hover {
+            background-color: #d9c7ff;
+        }
+        
+        .solution-content {
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .solution-content.hidden {
+            display: none;
+        }
+        .solution-content pre {
+            margin: 0;
+            padding: 1rem;
+            background-color: #272822; /* Fond pour le code */
+            color: #f8f8f2;
+            overflow-x: auto;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        /* Color Coding for Levels (C4-specific) */
+        .level-debutant { border-left: 5px solid #a366ff; }
+        .level-intermediaire { border-left: 5px solid #6a0dad; }
+        .level-avance { border-left: 5px solid #4a007a; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>C4 : Gestion des Exceptions et Entrées/Sorties (I/O) - Études de Cas (15/15)</h1>
+    <p style="text-align: center; margin-bottom: 2rem;">Sélectionnez un niveau de difficulté pour afficher les 5 exercices correspondants de la compétence C4.</p>
+
+    <div class="level-selector">
+        <button class="level-btn active" data-level="debutant">Débutant (5 Cas)</button>
+        <button class="level-btn" data-level="intermediaire">Intermédiaire (5 Cas)</button>
+        <button class="level-btn" data-level="avance">Avancé (5 Cas)</button>
+    </div>
+
+    <div id="exercises-container">
+        </div>
+
+</div>
+
+<script>
+    const allStudies = [
+        // --- NIVEAU DÉBUTANT (5 CAS) - Exceptions de base et I/O simple ---
+        {
+            level: "debutant",
+            title: "Étude de Cas 1 : Gestion de l'exception arithmétique",
+            criteria: "(Critères visés : Cr1 - Try/Catch, Cr2 - Gestion d'exception non vérifiée)",
+            problem: "Écrivez un programme qui essaie de diviser 10 par 0. <br>Utilisez un bloc `try-catch` pour capturer l'exception `ArithmeticException` <br> affichez un message clair expliquant l'erreur .",
+            solution: `public class TestArithmeticException {
+    public static void main(String[] args) {
+        try {
+            int resultat = 10 / 0; // Cette ligne va générer l'exception
+            System.out.println("Résultat : " + resultat); // Ne sera pas exécuté
+            
+        } catch (ArithmeticException e) { 
+            // Cr1, Cr2 : Capture et gestion
+            System.out.println("Erreur: Tentative de division par zéro.");
+            System.out.println("Détails de l'erreur : " + e.getMessage());
+        }
+        System.out.println("Fin du programme."); // L'exécution continue
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 2 : Gestion de l'exception d'index",
+            criteria: "(Critères visés : Cr1 - Try/Catch, Cr2 - Gestion d'exception non vérifiée)",
+            problem: "Déclarez un tableau d'entiers de taille 3.<br> Tentez d'accéder à l'élément d'index 5.<br> Utilisez `try-catch` pour capturer l'exception `ArrayIndexOutOfBoundsException`<br> affichez un message d'erreur approprié.",
+            solution: `public class TestIndexException {
+    public static void main(String[] args) {
+        int[] tableau = new int[3];
+        
+        try {
+            // Crée une ArrayIndexOutOfBoundsException
+            int valeur = tableau[5]; 
+            System.out.println("Valeur : " + valeur); // Non exécuté
+            
+        } catch (ArrayIndexOutOfBoundsException e) { 
+            // Cr1, Cr2 : Capture
+            System.out.println("Erreur d'accès : L'index demandé est hors limites du tableau (taille: " + tableau.length + ").");
+        }
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 3 : Utilisation du bloc 'finally'",
+            criteria: "(Critère visé : Cr3 - Utilisation du bloc 'finally')",
+            problem: "Écrivez une méthode qui génère une `NullPointerException` (unchecked). <br>Entourez l'appel de cette méthode d'un bloc `try-catch`. <br>Ajoutez un bloc `finally`  qui affiche 'Nettoyage terminé'. <br>Vérifiez que le bloc `finally` s'exécute, que l'exception soit capturée ou non.",
+            solution: `class DemoFinally {
+    public static void genererErreur() {
+        String s = null;
+        s.length(); // Lance NullPointerException
+    }
+}
+
+public class TestFinally {
+    public static void main(String[] args) {
+        try {
+            DemoFinally.genererErreur();
+        } catch (NullPointerException e) {
+            System.out.println("Exception capturée : Objet null.");
+        } finally {
+            // Cr3 : Ce bloc s'exécute toujours
+            System.out.println("Nettoyage terminé.");
+        }
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 4 : Écriture simple dans un fichier",
+            criteria: "(Critères visés : Cr4 - Flux de sortie, Cr5 - Classes I/O de base)",
+            problem: "Utilisez la classe `FileWriter` pour écrire la phrase 'Ceci est la première ligne.' dans un fichier nommé 'output.txt'. <br>N'oubliez pas de gérer l'exception `IOException` et de fermer le flux.",
+            solution: `import java.io.FileWriter;
+import java.io.IOException;
+
+public class TestFileWriter {
+    public static void main(String[] args) {
+        FileWriter writer = null; // Déclaration à l'extérieur pour le finally
+        try {
+            // Cr4, Cr5 : Création du flux de sortie
+            writer = new FileWriter("output.txt"); 
+            writer.write("Ceci est la première ligne.\n");
+            System.out.println("Écriture dans 'output.txt' réussie.");
+        } catch (IOException e) {
+            System.out.println("Erreur d'E/S : " + e.getMessage());
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close(); // Fermeture du flux
+                }
+            } catch (IOException e) {
+                System.out.println("Erreur lors de la fermeture : " + e.getMessage());
+            }
+        }
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 5 : Lecture simple d'un fichier",
+            criteria: "(Critères visés : Cr4 - Flux d'entrée, Cr5 - Classes I/O de base)",
+            problem: "Utilisez la classe `FileReader` pour lire un fichier nommé 'input.txt' caractère par caractère. <br>Affichez les caractères lus jusqu'à la fin du fichier (`-1`).<br> Assumez que 'input.txt' existe.",
+            solution: `import java.io.FileReader;
+import java.io.IOException;
+
+public class TestFileReader {
+    public static void main(String[] args) {
+        FileReader reader = null;
+        try {
+            // Cr4, Cr5 : Création du flux d'entrée
+            reader = new FileReader("input.txt"); 
+            int caractere;
+            System.out.print("Contenu de input.txt : ");
+            
+            // Lecture caractère par caractère
+            while ((caractere = reader.read()) != -1) {
+                System.out.print((char) caractere);
+            }
+        } catch (IOException e) {
+            System.out.println("Erreur d'E/S : " + e.getMessage());
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close(); // Fermeture du flux
+                }
+            } catch (IOException e) {
+                // Ignore l'erreur de fermeture
+            }
+        }
+    }
+}`
+        },
+        
+        // --- NIVEAU INTERMÉDIAIRE (5 CAS) - Exceptions multiples, I/O amélioré ---
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 6 : Multi-catch d'exceptions",
+            criteria: "(Critères visés : Cr1 - Multi-catch, Cr2 - Gestion d'exceptions multiples)",
+            problem: "Écrivez un bloc `try` qui pourrait générer soit une `ArithmeticException` soit une `NullPointerException`.<br> Utilisez un seul bloc `catch` avec la syntaxe **multi-catch** (`|`)  pour gérer les deux types d'exceptions de la même manière.",
+            solution: `public class TestMultiCatch {
+    public static void main(String[] args) {
+        String[] data = {"10", null};
+        
+        try {
+            // Tentative qui pourrait échouer par division (data.length=2, 2/1=2 OK)
+            int div = data.length / 1; 
+            
+            // Tentative qui échoue par NullPointerException
+            System.out.println(data[1].length()); 
+            
+        } catch (ArithmeticException | NullPointerException e) {
+            // Cr1, Cr2 : Un seul bloc capture les deux
+            System.out.println("Erreur multiple capturée !");
+            System.out.println("Type d'erreur : " + e.getClass().getSimpleName());
+            
+        } catch (Exception e) {
+            // Gestion de toutes les autres exceptions (si nécessaire)
+            System.out.println("Autre erreur...");
+        }
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 7 : Déclenchement d'une exception non vérifiée",
+            criteria: "(Critère visé : Cr2 - Déclenchement 'throw' d'une Unchecked Exception)",
+            problem: "Créez une méthode `traiterAge(int age)` qui **déclenche** (`throw`) une `IllegalArgumentException`  si l'âge est négatif. <br>Testez la méthode dans `main` <br> vérifiez que l'exception est lancée si l'âge est incorrect.",
+            solution: `class Validation {
+    // Cr2 : La méthode ne force pas l'ajout d'un throws car c'est une Unchecked Exception
+    public static void traiterAge(int age) {
+        if (age < 0) {
+            // Déclenchement de l'exception
+            throw new IllegalArgumentException("L'âge ne peut pas être négatif : " + age); 
+        }
+        System.out.println("Âge valide : " + age);
+    }
+}
+
+public class TestThrowUnchecked {
+    public static void main(String[] args) {
+        try {
+            Validation.traiterAge(25);
+            Validation.traiterAge(-10); // Déclenche l'exception ici
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erreur de validation capturée : " + e.getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 8 : Gestion des ressources automatique (Try-with-resources)",
+            criteria: "(Critère visé : Cr3 - Try-with-resources pour libération automatique des ressources)",
+            problem: "Réécrivez l'étude de cas 4 (Écriture de fichier) en utilisant la syntaxe **Try-with-resources** . <br>Cela doit garantir que la ressource `FileWriter` est fermée automatiquement, sans avoir besoin d'un bloc `finally` séparé.",
+            solution: `import java.io.FileWriter;
+import java.io.IOException;
+
+public class TestTryWithResources {
+    public static void main(String[] args) {
+        // Cr3 : La ressource (FileWriter) est déclarée entre les parenthèses.
+        // Elle sera automatiquement fermée (grâce à l'interface AutoCloseable).
+        try (FileWriter writer = new FileWriter("output_auto.txt")) { 
+            
+            writer.write("L'écriture automatique fonctionne.");
+            System.out.println("Écriture réussie. Le flux est automatiquement fermé.");
+            
+        } catch (IOException e) {
+            System.out.println("Erreur d'E/S : " + e.getMessage());
+        } // Pas de bloc finally nécessaire
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 9 : Lecture de fichier ligne par ligne (BufferedReader)",
+            criteria: "(Critères visés : Cr4 - Flux d'entrée, Cr5 - Bufferisation)",
+            problem: "Utilisez `FileReader` et `BufferedReader`  pour lire un fichier nommé 'lignes.txt' **ligne par ligne** .<br> Affichez chaque ligne lue jusqu'à la fin du fichier.",
+            solution: `import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class TestBufferedReader {
+    public static void main(String[] args) {
+        // Utilisation de Try-with-resources pour la fermeture automatique
+        try (BufferedReader reader = new BufferedReader(new FileReader("lignes.txt"))) {
+            
+            String ligne;
+            System.out.println("Lecture ligne par ligne :");
+            
+            // Cr4, Cr5 : readLine() permet une lecture optimisée
+            while ((ligne = reader.readLine()) != null) {
+                System.out.println(" -> " + ligne);
+            }
+            
+        } catch (IOException e) {
+            System.out.println("Erreur de lecture de fichier : " + e.getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 10 : Écriture de données formatées (PrintWriter)",
+            criteria: "(Critères visés : Cr4 - Flux de sortie, Cr5 - Classes d'écriture spécialisées)",
+            problem: "Utilisez `PrintWriter`pour écrire des données dans un fichier 'rapport.txt'. <br>Écrivez une chaîne de caractères, puis un entier (`int`) et un flottant (`double`) en utilisant des méthodes qui permettent un formatage facile (comme `println` ou `format`).",
+            solution: `import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+public class TestPrintWriter {
+    public static void main(String[] args) {
+        // Utilisation de Try-with-resources
+        try (PrintWriter writer = new PrintWriter(new FileWriter("rapport.txt"))) {
+            
+            // Cr4, Cr5 : Utilisation des méthodes de formatage
+            writer.println("Rapport de test :");
+            writer.printf("Valeur entière : %d\n", 42);
+            writer.printf("Valeur décimale : %.2f\n", 123.456);
+            
+            System.out.println("Écriture formatée dans 'rapport.txt' réussie.");
+            
+        } catch (IOException e) {
+            System.out.println("Erreur d'E/S : " + e.getMessage());
+        }
+    }
+}`
+        },
+
+        // --- NIVEAU AVANCÉ (5 CAS) - Exceptions personnalisées, NIO, Sérialisation ---
+        {
+            level: "avance",
+            title: "Étude de Cas 11 : Création et déclenchement d'une exception vérifiée (Checked)",
+            criteria: "(Critères visés : Cr2 - Création et déclenchement d'une Checked Exception)",
+            problem: "Créez une exception personnalisée vérifiée  nommée **StockInsuffisantException** qui hérite de `Exception`.<br> Écrivez une méthode `vendre(int quantite)` dans une classe `Produit` qui déclenche cette exception si la quantité en stock passe sous zéro. <br>La méthode doit utiliser le mot-clé `throws`.",
+            solution: `// Cr2 : Définition de l'exception vérifiée
+class StockInsuffisantException extends Exception {
+    public StockInsuffisantException(String message) {
+        super(message);
+    }
+}
+
+class Produit {
+    private int stock = 10;
+
+    // Cr2 : Utilisation de throws dans la signature
+    public void vendre(int quantite) throws StockInsuffisantException {
+        if (stock - quantite < 0) {
+            // Déclenchement de l'exception
+            throw new StockInsuffisantException("Stock actuel: " + stock + ". Vente de " + quantite + " impossible.");
+        }
+        stock -= quantite;
+        System.out.println("Vente de " + quantite + " réussie. Reste: " + stock);
+    }
+}
+
+public class TestCustomCheckedException {
+    public static void main(String[] args) {
+        Produit p = new Produit();
+        try {
+            p.vendre(5); // Réussite
+            p.vendre(10); // Échec, exception lancée et capturée
+        } catch (StockInsuffisantException e) {
+            System.out.println("Erreur de stock : " + e.getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 12 : Propagation d'exceptions (throws)",
+            criteria: "(Critères visés : Cr2 - Propagation via 'throws', Cr3 - Gestion en cascade)",
+            problem: "Créez trois méthodes :<br> `methodC()` qui utilise `FileReader` et propage l'`IOException` via `throws`, <br>`methodB()` qui appelle `methodC()` et propage l'exception, <br> `main()`  qui appelle `methodB()` et gère l'exception avec `try-catch`.",
+            solution: `import java.io.FileReader;
+import java.io.IOException;
+
+class Propagateur {
+    // Cr2 : Propage l'exception
+    public static void methodC() throws IOException {
+        FileReader fr = new FileReader("fichier_absent.txt");
+        fr.close(); 
+    }
+
+    // Cr2 : Propage l'exception reçue de C
+    public static void methodB() throws IOException {
+        System.out.println("-> Entrée dans B");
+        methodC();
+        System.out.println("-> Sortie de B");
+    }
+}
+
+public class TestPropagation {
+    public static void main(String[] args) {
+        try {
+            // Cr3 : Gestion finale de l'exception propagée
+            Propagateur.methodB();
+        } catch (IOException e) {
+            System.out.println("--- Exception gérée dans main (Cr3) ---");
+            System.out.println("Cause : " + e.getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 13 : Chaînage d'exceptions (initCause)",
+            criteria: "(Critère visé : Cr2 - Chaînage d'exceptions pour conserver la cause racine)",
+            problem: "Écrivez une méthode `chargerConfig()` qui capture une `IOException` (erreur I/O) mais lance une `ConfigurationException` (exception métier personnalisée non vérifiée). <br>Utilisez la méthode `initCause()` pour attacher l'erreur I/O d'origine à l'exception métier. Testez l'affichage de la cause racine.",
+            solution: `class ConfigurationException extends RuntimeException {
+    public ConfigurationException(String message, Throwable cause) {
+        super(message, cause); // Le constructeur avec cause est souvent préféré
+    }
+}
+
+class SystemLoader {
+    public static void chargerConfig() {
+        try {
+            // Simule une erreur de lecture de fichier
+            throw new IOException("Fichier config.ini introuvable."); 
+        } catch (IOException e) {
+            // Cr2 : Chaînage (si le constructeur ne le fait pas)
+            ConfigurationException ce = new ConfigurationException("Erreur lors du chargement de la configuration.", e);
+            // Si le constructeur n'acceptait pas la cause : ce.initCause(e); 
+            throw ce;
+        }
+    }
+}
+
+public class TestChaining {
+    public static void main(String[] args) {
+        try {
+            SystemLoader.chargerConfig();
+        } catch (ConfigurationException e) {
+            System.out.println("Erreur métier : " + e.getMessage());
+            // Affichage de la cause racine
+            System.out.println("Cause originale (I/O) : " + e.getCause().getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 14 : Opérations de Fichier (NIO - Java 7+)",
+            criteria: "(Critères visés : Cr5 - Utilisation de l'API NIO (Files), Cr4 - Création de répertoire)",
+            problem: "Utilisez la classe `java.nio.file.Files` pour vérifier si un répertoire nommé 'data' existe.<br> S'il n'existe pas, créez-le .<br> Affichez le statut final du répertoire. <br>Gérez l'exception `IOException` requise.",
+            solution: `import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class TestNIOFiles {
+    public static void main(String[] args) {
+        Path repertoire = Paths.get("data"); // Cr5 : Référence au répertoire
+        
+        try {
+            if (Files.exists(repertoire)) {
+                System.out.println("Le répertoire 'data' existe déjà.");
+            } else {
+                // Cr4 : Création du répertoire
+                Files.createDirectory(repertoire);
+                System.out.println("Le répertoire 'data' a été créé.");
+            }
+        } catch (IOException e) {
+            System.out.println("Erreur d'E/S avec NIO : " + e.getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 15 : Sérialisation (Sauvegarde/Chargement d'objet)",
+            criteria: "(Critères visés : Cr5 - Flux d'objets (Sérialisation), Cr4 - Flux binaire)",
+            problem: "Créez une classe `Parametres` qui `implements Serializable`. <br>Écrivez une méthode pour sérialiser un objet `Parametres`  dans un fichier 'config.ser' (`ObjectOutputStream`) <br>et une méthode pour le désérialiser (`ObjectInputStream`).",
+            solution: `import java.io.*;
+
+// La classe doit implémenter l'interface Serializable
+class Parametres implements Serializable {
+    private static final long serialVersionUID = 1L;
+    public int niveau = 1;
+    public String theme = "Dark";
+}
+
+public class TestSerialization {
+    public static void main(String[] args) {
+        Parametres p = new Parametres();
+        
+        // 1. Sérialisation (Sauvegarde)
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("config.ser"))) {
+            // Cr4, Cr5 : Écriture de l'objet dans le flux binaire
+            oos.writeObject(p); 
+            System.out.println("Objet Parametres sérialisé.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        // 2. Désérialisation (Chargement)
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("config.ser"))) {
+            // Lecture et cast de l'objet
+            Parametres pCharge = (Parametres) ois.readObject(); 
+            System.out.println("Objet chargé. Thème : " + pCharge.theme + ", Niveau : " + pCharge.niveau);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}`
+        }
+    ];
+
+    const exercisesContainer = document.getElementById('exercises-container');
+    const levelButtons = document.querySelectorAll('.level-btn');
+    let currentLevel = 'debutant';
+
+    /**
+     * Rend les exercices pour un niveau donné.
+     * @param {string} level 
+     */
+    function renderExercises(level) {
+        exercisesContainer.innerHTML = '';
+        const filteredStudies = allStudies.filter(study => study.level === level);
+
+        filteredStudies.forEach((study, index) => {
+            const card = document.createElement('div');
+            // Mise à jour des classes CSS pour C4
+            card.className = `exercise-card level-${level}`;
+            
+            // Le numéro de cas correspond à son index global (1 à 15) pour une référence simple
+            const caseNumber = allStudies.indexOf(study) + 1;
+
+            // Utilisation des Template Literals pour générer le HTML de la carte
+            card.innerHTML = `
+                <h3>${study.title} (Cas ${caseNumber}/15 - C4)</h3>
+                <p class="criteria">${study.criteria}</p>
+                <p><strong>Problème :</strong> ${study.problem}</p>
+                
+                <button class="solution-toggle">Afficher la solution Java</button>
+                <div class="solution-content hidden">
+                    <pre><code class="language-java">${study.solution.trim()}</code></pre>
+                </div>
+            `;
+
+            const toggleButton = card.querySelector('.solution-toggle');
+            const solutionContent = card.querySelector('.solution-content');
+            
+            // Logique de bascule pour afficher/masquer la solution
+            toggleButton.addEventListener('click', () => {
+                const isHidden = solutionContent.classList.toggle('hidden');
+                
+                // Mettre à jour le texte du bouton en fonction de l'état
+                if (isHidden) {
+                    toggleButton.textContent = 'Afficher la solution Java';
+                } else {
+                    toggleButton.textContent = 'Masquer la solution';
+                }
+            });
+
+            exercisesContainer.appendChild(card);
+        });
+    }
+
+    /**
+     * Change le niveau affiché et met à jour les boutons.
+     * @param {string} level 
+     */
+    function changeLevel(level) {
+        currentLevel = level;
+        
+        // Mise à jour de l'état des boutons
+        levelButtons.forEach(btn => {
+            if (btn.dataset.level === level) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        renderExercises(level);
+    }
+
+    // --- Initialisation ---
+    // Attacher les événements aux boutons
+    levelButtons.forEach(btn => {
+        btn.addEventListener('click', () => changeLevel(btn.dataset.level));
+    });
+
+    // Rendu initial (Débutant par défaut)
+    changeLevel(currentLevel);
+
+</script>
+</body>
+</html>
+

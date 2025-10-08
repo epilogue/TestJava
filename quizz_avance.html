@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Certification Java - Niveau Avancé (C1 à C5)</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom Styles for better visual consistency */
+        body {
+            background-color: #e5e7eb; /* Gray-100 */
+        }
+        .container-quiz {
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+        .competence-selector {
+            background-color: #1f2937; /* Gray-800 */
+        }
+        .competence-btn.active {
+            border-bottom: 3px solid #f97316; /* Orange-500 */
+            color: #f97316;
+        }
+        .option-button {
+            transition: all 0.2s;
+        }
+        .option-button:hover:not(.disabled) {
+            background-color: #f3f4f6; /* Gray-100 */
+        }
+        .option-button.correct {
+            background-color: #d1fae5; /* Green-100 */
+            border-color: #10b981; /* Green-500 */
+            pointer-events: none;
+        }
+        .option-button.incorrect {
+            background-color: #fee2e2; /* Red-100 */
+            border-color: #ef4444; /* Red-500 */
+            pointer-events: none;
+        }
+        .explanation {
+            border-left: 4px solid #f97316; /* Orange-500 */
+        }
+        pre {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-quiz p-4">
+    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-4">
+        Quiz Avancé - Certification Java (C1 à C5) 🎓
+    </h1>
+    
+    <div class="competence-selector p-3 rounded-t-lg shadow-lg flex flex-wrap justify-center space-x-2 sm:space-x-4">
+        <button data-comp="0" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition active">C1</button>
+        <button data-comp="1" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C2</button>
+        <button data-comp="2" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C3</button>
+        <button data-comp="3" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C4</button>
+        <button data-comp="4" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C5</button>
+    </div>
+
+    <div id="quiz-card" class="bg-white rounded-b-lg shadow-lg p-6 sm:p-8">
+        </div>
+
+    <div class="bg-white rounded-lg shadow p-4 text-sm text-gray-600 mt-6">
+        <p class="font-semibold mb-2">📋 Informations sur le quiz :</p>
+        <ul class="space-y-1">
+            <li>• Niveau de difficulté : **Avancé**</li>
+            <li>• Chaque quiz contient **5 questions** (QCM/QCU) spécifiques à la compétence.</li>
+            <li>• Score cumulé total : <span id="final-score" class="font-bold text-orange-600"></span></li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        // --- C1 : Éléments fondamentaux et algorithmie (Avancé) ---
+        {
+          competence: "C1 - Éléments fondamentaux et algorithmie",
+          level: "Avancé",
+          questions: [
+            {
+              question: "Quel est le résultat de l'opération bit-à-bit `int x = 5; int y = 3; int z = x & y;` ?",
+              options: [
+                "z vaut 1",
+                "z vaut 2",
+                "z vaut 7",
+                "z vaut 15"
+              ],
+              correct: 0,
+              explanation: "L'opérateur ET bit-à-bit (`&`) compare les représentations binaires (5=101, 3=011). `101 & 011` donne `001`, ce qui correspond à 1 en décimal."
+            },
+            {
+              question: "Si `String s1 = \"Java\";` et `String s2 = new String(\"Java\");`, que retourne `s1 == s2` ?",
+              options: [
+                "true",
+                "false",
+                "Le code ne compile pas",
+                "Cela dépend de la version de la JVM"
+              ],
+              correct: 1,
+              explanation: "L'opérateur `==` compare les références (adresses mémoire). `s1` référence un objet du pool de String, `s2` référence un nouvel objet créé sur le tas, donc les adresses sont différentes."
+            },
+            {
+              question: "Dans le code `String.format(\"|%-10.2f|\", 123.456)`, quel sera le formatage de la sortie ?",
+              options: [
+                "|123.46    |",
+                "|    123.46|",
+                "|123.456   |",
+                "|   123.456|"
+              ],
+              correct: 0,
+              explanation: "Le flag `-` spécifie l'alignement à gauche, `10` la largeur totale et `.2f` arrondit le flottant à deux décimales."
+            },
+            {
+              question: "Que se passe-t-il si vous tentez de modifier un tableau passé en paramètre à une méthode ?",
+              options: [
+                "La modification est impossible car le tableau est passé par valeur.",
+                "Seule une copie du tableau est modifiée, l'original reste intact.",
+                "Le tableau original est modifié car la référence au tableau est passée par valeur.",
+                "Une `IllegalAccessException` est levée."
+              ],
+              correct: 2,
+              explanation: "En Java, les objets (y compris les tableaux) sont passés par référence (la référence est copiée). La méthode reçoit donc l'adresse de l'objet original et peut le modifier."
+            },
+            {
+              question: "Lequel de ces algorithmes de tri a la meilleure complexité temporelle dans le pire des cas (Big O notation) ?",
+              options: [
+                "Tri à bulles (Bubble Sort)",
+                "Tri par sélection (Selection Sort)",
+                "Tri par insertion (Insertion Sort)",
+                "Tri fusion (Merge Sort)"
+              ],
+              correct: 3,
+              explanation: "Le tri fusion (Merge Sort) a une complexité garantie de O(n log n) dans le pire des cas, tandis que les autres ont une complexité de O(n²)."
+            }
+          ]
+        },
+        
+        // --- C2 : Programmation Orientée Objet (Avancé) ---
+        {
+          competence: "C2 - Programmation Orientée Objet",
+          level: "Avancé",
+          questions: [
+            {
+              question: "Si une classe `Voiture` hérite de `Vehicule`, et que `v` est une variable de type `Vehicule` contenant une instance de `Voiture`, quel est le terme pour cette assignation `Vehicule v = new Voiture();` ?",
+              options: [
+                "Downcasting",
+                "Upcasting (ou transtypage implicite)",
+                "Autoboxing",
+                "Polymorphisme statique"
+              ],
+              correct: 1,
+              explanation: "L'upcasting est le processus de transtypage d'une instance de classe enfant vers son type de classe parent. C'est implicite et toujours sûr."
+            },
+            {
+              question: "Pour garantir qu'une méthode ne puisse pas être redéfinie (overridden) par une classe enfant, quel modificateur faut-il utiliser ?",
+              options: [
+                "`private`",
+                "`static`",
+                "`final`",
+                "Tous les modificateurs ci-dessus l'empêchent."
+              ],
+              correct: 3,
+              explanation: "`private` rend la méthode invisible à la classe enfant, `static` la lie à la classe et non à l'instance (masquage, pas redéfinition), et `final` interdit explicitement la redéfinition."
+            },
+            {
+              question: "Que se passe-t-il si vous n'appelez pas explicitement `super()` dans le constructeur d'une classe enfant ?",
+              options: [
+                "Le code ne compile pas.",
+                "Le constructeur de la classe parent n'est jamais appelé.",
+                "Un appel implicite à `super()` (le constructeur sans argument du parent) est inséré par le compilateur.",
+                "Une `RuntimeException` est levée à l'exécution."
+              ],
+              correct: 2,
+              explanation: "Si le premier énoncé d'un constructeur de classe enfant n'est pas un appel à `this()` ou `super()`, le compilateur insère automatiquement un appel au constructeur par défaut du parent (`super()`)."
+            },
+            {
+              question: "Quel est le principal problème si vous redéfinissez `equals()` sans redéfinir `hashCode()` ?",
+              options: [
+                "Le code ne compilera pas.",
+                "Les comparaisons avec `==` échoueront.",
+                "Les collections basées sur le hachage (comme `HashSet`, `HashMap`) ne fonctionneront pas correctement.",
+                "La performance de l'application sera dégradée."
+              ],
+              correct: 2,
+              explanation: "Le contrat entre `equals()` et `hashCode()` stipule que si deux objets sont égaux, ils doivent avoir le même hash code. Si ce n'est pas le cas, un `HashSet` peut stocker des doublons (selon `equals()`)."
+            },
+            {
+              question: "Lequel de ces design patterns est une alternative à l'héritage pour étendre les fonctionnalités, favorisant la flexibilité ?",
+              options: [
+                "Singleton",
+                "Factory",
+                "Decorator (Décorateur)",
+                "Observer (Observateur)"
+              ],
+              correct: 2,
+              explanation: "Le pattern Décorateur permet d'ajouter dynamiquement des responsabilités à un objet en l'enveloppant, offrant une alternative flexible à l'héritage pour l'extension de fonctionnalités."
+            }
+          ]
+        },
+        
+        // --- C3 : Concepts avancés POO (Avancé) ---
+        {
+          competence: "C3 - Concepts avancés POO",
+          level: "Avancé",
+          questions: [
+            {
+              question: "Depuis Java 8, une `interface` peut contenir :",
+              options: [
+                "Uniquement des signatures de méthodes abstraites.",
+                "Des signatures de méthodes, des constantes (`static final`) et des méthodes `default` et `static` avec corps.",
+                "Des attributs d'instance.",
+                "Des constructeurs."
+              ],
+              correct: 1,
+              explanation: "Java 8 a introduit les méthodes `default` (qui peuvent être redéfinies) et `static` (qui ne peuvent pas) dans les interfaces, leur permettant d'avoir un comportement concret."
+            },
+            {
+              question: "À quoi sert une 'functional interface' (interface fonctionnelle) ?",
+              options: [
+                "À définir une classe qui ne contient que des fonctions.",
+                "À marquer une interface qui peut être utilisée dans un contexte de programmation fonctionnelle (ex: expressions lambda).",
+                "À garantir qu'une interface ne peut avoir qu'une seule implémentation.",
+                "À forcer toutes les méthodes à être `static`."
+              ],
+              correct: 1,
+              explanation: "Une interface fonctionnelle a une seule méthode abstraite et peut être la cible d'une expression lambda ou d'une référence de méthode."
+            },
+            {
+              question: "Quelle est la principale différence entre une `classe abstraite` et une `interface` en Java (après Java 8) ?",
+              options: [
+                "Une classe abstraite peut avoir un constructeur, une interface non.",
+                "Une interface ne peut pas avoir de méthodes avec un corps.",
+                "Une classe ne peut hériter que d'une seule classe abstraite, mais peut implémenter plusieurs interfaces.",
+                "Les réponses A et C sont correctes."
+              ],
+              correct: 3,
+              explanation: "Les différences clés restantes sont l'héritage multiple (interfaces) et la capacité pour les classes abstraites d'avoir un état (attributs d'instance) et des constructeurs."
+            },
+            {
+              question: "Que signifie `throw new MonException(\"Erreur\", cause);` ?",
+              options: [
+                "Créer une exception qui sera lancée plus tard.",
+                "Lancer une nouvelle exception et perdre l'information sur l'exception d'origine (`cause`).",
+                "Lancer une nouvelle exception en conservant l'exception d'origine (`cause`) comme cause racine (chaînage d'exceptions).",
+                "Déclarer que la méthode peut lancer `MonException`."
+              ],
+              correct: 2,
+              explanation: "Le chaînage d'exceptions est une pratique cruciale pour ne pas perdre la pile d'appels (stack trace) de l'erreur initiale lorsqu'on encapsule une exception bas niveau dans une exception métier."
+            },
+            {
+              question: "Si une énumération `Jour` a des constantes `LUNDI`, `MARDI`, etc., quelle méthode permet de récupérer la constante `LUNDI` à partir de la chaîne `\"LUNDI\"` ?",
+              options: [
+                "`Jour.get(\"LUNDI\")`",
+                "`Jour.parse(\"LUNDI\")`",
+                "`Jour.valueOf(\"LUNDI\")`",
+                "`new Jour(\"LUNDI\")`"
+              ],
+              correct: 2,
+              explanation: "La méthode statique `valueOf()` est automatiquement générée pour chaque énumération et permet de convertir une chaîne de caractères en une instance de l'énumération."
+            }
+          ]
+        },
+        
+        // --- C4 : Collections, Streams et API de dates (Avancé) ---
+        {
+          competence: "C4 - Collections, Streams et API de dates",
+          level: "Avancé",
+          questions: [
+            {
+              question: "Quelle opération terminale de l'API Stream permet de transformer un Stream en une `Map` ?",
+              options: [
+                "`collect(Collectors.toMap(keyMapper, valueMapper))`",
+                "`map(k -> v)`",
+                "`reduce(new HashMap(), ...)`",
+                "`collect(Collectors.groupingBy(...))`"
+              ],
+              correct: 0,
+              explanation: "`Collectors.toMap()` est le collecteur standard pour agréger les éléments d'un flux dans une `Map`, en spécifiant comment extraire la clé et la valeur de chaque élément."
+            },
+            {
+              question: "Comment calculer la durée entre deux objets `LocalDateTime` en jours ?",
+              options: [
+                "`ChronoUnit.DAYS.between(start, end)`",
+                "`Duration.ofDays(start, end)`",
+                "`Period.between(start, end).getDays()`",
+                "Ce n'est pas possible directement avec `LocalDateTime`."
+              ],
+              correct: 0,
+              explanation: "La classe `ChronoUnit` fournit une méthode statique `between` pour calculer la durée entre deux objets temporels dans une unité spécifiée."
+            },
+            {
+              question: "Quelle est la différence principale entre les opérations intermédiaires `map()` et `flatMap()` dans un Stream ?",
+              options: [
+                "`map()` transforme chaque élément, `flatMap()` les filtre.",
+                "`map()` produit un Stream, `flatMap()` produit une Collection.",
+                "`map()` applique une fonction 1-à-1, `flatMap()` applique une fonction 1-à-plusieurs et fusionne les résultats.",
+                "`flatMap()` est une version parallélisée de `map()`."
+              ],
+              correct: 2,
+              explanation: "`flatMap()` est utilisé pour transformer un élément en un *Stream* d'autres éléments, puis tous ces sous-streams sont 'aplatis' en un seul stream résultant."
+            },
+            {
+              question: "Quel est le but de la classe `Optional` introduite en Java 8 ?",
+              options: [
+                "Rendre tous les attributs d'une classe optionnels.",
+                "Remplacer toutes les exceptions par des valeurs optionnelles.",
+                "Fournir un conteneur qui peut ou non contenir une valeur non-nulle, pour éviter les `NullPointerException`.",
+                "Optimiser la performance des Streams."
+              ],
+              correct: 2,
+              explanation: "`Optional` est un type de retour qui force l'appelant à considérer explicitement le cas où une valeur est absente, améliorant la robustesse du code."
+            },
+            {
+              question: "Dans l'API Stream, que fait l'opération `reduce()` ?",
+              options: [
+                "Elle réduit le nombre d'éléments du Stream en en filtrant certains.",
+                "Elle effectue une opération d'agrégation sur les éléments du Stream pour produire un résultat unique.",
+                "Elle transforme chaque élément en une version 'réduite' de lui-même.",
+                "Elle est un synonyme de `count()`."
+              ],
+              correct: 1,
+              explanation: "L'opération `reduce` combine les éléments d'un stream de manière répétée pour produire une valeur unique, comme une somme, une valeur maximale, ou une concaténation."
+            }
+          ]
+        },
+        
+        // --- C5 : Connexion à une base de données avec JDBC (Avancé) ---
+        {
+          competence: "C5 - Connexion à une base de données avec JDBC",
+          level: "Avancé",
+          questions: [
+            {
+              question: "Quel est l'objectif principal d'un `Savepoint` dans une transaction JDBC ?",
+              options: [
+                "Valider (commit) une partie de la transaction.",
+                "Créer un point de sauvegarde pour permettre un rollback partiel.",
+                "Sauvegarder l'état de la base de données sur le disque.",
+                "Accélérer les transactions longues."
+              ],
+              correct: 1,
+              explanation: "Un `Savepoint` permet d'annuler une partie d'une transaction (les opérations effectuées après le savepoint) sans annuler la transaction entière."
+            },
+            {
+              question: "Comment peut-on récupérer l'ID auto-généré après une requête `INSERT` ?",
+              options: [
+                "En exécutant une requête `SELECT MAX(ID)` juste après.",
+                "L'ID est retourné directement par la méthode `executeUpdate()`.",
+                "En créant le `PreparedStatement` avec l'option `Statement.RETURN_GENERATED_KEYS` et en utilisant `getGeneratedKeys()`.",
+                "Ce n'est pas possible avec JDBC standard."
+              ],
+              correct: 2,
+              explanation: "L'option `RETURN_GENERATED_KEYS` indique au driver JDBC de retourner les clés auto-incrémentées via un `ResultSet` spécial accessible par `getGeneratedKeys()`."
+            },
+            {
+              question: "Que se passe-t-il si vous appelez `close()` sur une `Connection` JDBC ?",
+              options: [
+                "Seul l'objet `Connection` est fermé, les `Statement` et `ResultSet` restent ouverts.",
+                "Cela ferme la connexion et libère immédiatement toutes les ressources JDBC associées (Statement, ResultSet).",
+                "Cela met la connexion en attente dans un pool de connexions.",
+                "Cela valide (commit) automatiquement la transaction en cours avant de fermer."
+              ],
+              correct: 1,
+              explanation: "La spécification JDBC stipule que fermer une `Connection` doit également fermer tous les `Statement` et `ResultSet` créés à partir d'elle."
+            },
+            {
+              question: "Qu'est-ce qu'un niveau d'isolation de transaction comme `TRANSACTION_SERIALIZABLE` vise à prévenir ?",
+              options: [
+                "Uniquement les lectures non reproductibles (non-repeatable reads).",
+                "Uniquement les lectures fantômes (phantom reads).",
+                "Les lectures sales (dirty reads), les lectures non reproductibles et les lectures fantômes.",
+                "Les `SQLException`."
+              ],
+              correct: 2,
+              explanation: "Le niveau `TRANSACTION_SERIALIZABLE` est le plus strict. Il empêche tous les types d'interférences entre transactions concurrentes, garantissant une isolation complète, mais au détriment de la performance."
+            },
+            {
+              question: "Dans quel cas est-il plus performant d'utiliser `CallableStatement` plutôt que `PreparedStatement` ?",
+              options: [
+                "Pour exécuter des requêtes `SELECT` complexes.",
+                "Pour exécuter des procédures stockées (stored procedures) dans la base de données.",
+                "Pour exécuter des transactions.",
+                "Il n'y a pas de différence de performance."
+              ],
+              correct: 1,
+              explanation: "`CallableStatement` est une sous-interface de `PreparedStatement` spécifiquement conçue pour appeler des procédures stockées, qui sont pré-compilées côté base de données et peuvent être plus performantes."
+            }
+          ]
+        }
+    ];
+
+    let currentCompetenceIndex = 0;
+    let currentQuestionIndex = 0;
+    let selectedAnswer = null;
+    let showResult = false;
+    // Stockage du score et des réponses par compétence: [score, reponse_index_selectionné_par_question]
+    let quizState = quizData.map(comp => ({
+        score: 0,
+        answered: Array(comp.questions.length).fill(null), // null: non répondu, -1: réponse incorrecte, index: réponse correcte
+        isCompleted: false
+    }));
+
+    const quizCard = document.getElementById('quiz-card');
+    const competenceButtons = document.querySelectorAll('.competence-btn');
+    const finalScoreDisplay = document.getElementById('final-score');
+
+    const TOTAL_QUESTIONS = quizData.reduce((sum, comp) => sum + comp.questions.length, 0);
+
+    // --- Core Logic ---
+
+    function updateFinalScoreDisplay() {
+        const totalScore = quizState.reduce((sum, state) => sum + state.score, 0);
+        finalScoreDisplay.textContent = `${totalScore}/${TOTAL_QUESTIONS} (${Math.round((totalScore / TOTAL_QUESTIONS) * 100)}%)`;
+    }
+
+    function checkAnswer(selectedIndex) {
+        if (showResult) return; // Empêche de répondre deux fois
+
+        const currentCompState = quizState[currentCompetenceIndex];
+        const currentQuestion = quizData[currentCompetenceIndex].questions[currentQuestionIndex];
+        
+        selectedAnswer = selectedIndex;
+        showResult = true;
+
+        // Mise à jour de l'état (score et réponse)
+        if (selectedIndex === currentQuestion.correct) {
+            currentCompState.score++;
+            currentCompState.answered[currentQuestionIndex] = selectedIndex; // Stocke l'index de la réponse correcte
+        } else {
+             currentCompState.answered[currentQuestionIndex] = -1; // -1 pour incorrect
+        }
+        
+        if (currentQuestionIndex === quizData[currentCompetenceIndex].questions.length - 1) {
+            currentCompState.isCompleted = true;
+        }
+
+        renderQuiz();
+        updateFinalScoreDisplay();
+    }
+
+    function nextQuestion() {
+        showResult = false;
+        selectedAnswer = null;
+        
+        const questionsInComp = quizData[currentCompetenceIndex].questions.length;
+
+        if (currentQuestionIndex < questionsInComp - 1) {
+            // Passer à la question suivante dans la même compétence
+            currentQuestionIndex++;
+        } else {
+            // Passer à la compétence suivante si la question actuelle est la dernière
+            if (currentCompetenceIndex < quizData.length - 1) {
+                currentCompetenceIndex++;
+                currentQuestionIndex = 0;
+                // Met à jour l'état des boutons de compétence
+                competenceButtons.forEach(btn => btn.classList.remove('active'));
+                competenceButtons[currentCompetenceIndex].classList.add('active');
+            } else {
+                // Quiz entièrement terminé
+                return;
+            }
+        }
+        renderQuiz();
+    }
+    
+    function previousQuestion() {
+        showResult = false;
+        selectedAnswer = null;
+        
+        if (currentQuestionIndex > 0) {
+            // Revenir à la question précédente dans la même compétence
+            currentQuestionIndex--;
+        } else {
+            // Revenir à la compétence précédente
+            if (currentCompetenceIndex > 0) {
+                currentCompetenceIndex--;
+                currentQuestionIndex = quizData[currentCompetenceIndex].questions.length - 1;
+                // Met à jour l'état des boutons de compétence
+                competenceButtons.forEach(btn => btn.classList.remove('active'));
+                competenceButtons[currentCompetenceIndex].classList.add('active');
+            } else {
+                // Première question de la première compétence
+                return;
+            }
+        }
+        
+        // Si on revient à une question déjà répondue, afficher la réponse enregistrée
+        const answeredState = quizState[currentCompetenceIndex].answered[currentQuestionIndex];
+        if (answeredState !== null) {
+            showResult = true;
+            // Si la réponse était correcte, selectedAnswer doit être l'index correct pour le rendu
+            selectedAnswer = answeredState !== -1 ? answeredState : quizData[currentCompetenceIndex].questions[currentQuestionIndex].correct; 
+        }
+
+        renderQuiz();
+    }
+
+    function resetQuiz() {
+        quizState = quizData.map(comp => ({
+            score: 0,
+            answered: Array(comp.questions.length).fill(null),
+            isCompleted: false
+        }));
+        currentCompetenceIndex = 0;
+        currentQuestionIndex = 0;
+        selectedAnswer = null;
+        showResult = false;
+        competenceButtons.forEach(btn => btn.classList.remove('active'));
+        competenceButtons[0].classList.add('active');
+        renderQuiz();
+        updateFinalScoreDisplay();
+    }
+
+
+    // --- Rendering Logic (HTML Generation) ---
+
+    function renderQuiz() {
+        const currentComp = quizData[currentCompetenceIndex];
+        const currentQuestion = currentComp.questions[currentQuestionIndex];
+        const questionsInComp = currentComp.questions.length;
+        const compScore = quizState[currentCompetenceIndex].score;
+        
+        // Vérifie si la question a été répondue pour restaurer l'état
+        const answeredIndex = quizState[currentCompetenceIndex].answered[currentQuestionIndex];
+        const isAnswered = answeredIndex !== null;
+        
+        if (isAnswered && !showResult) {
+             showResult = true;
+             // Si la réponse était incorrecte (-1), on affiche la bonne réponse pour le rendu
+             selectedAnswer = answeredIndex !== -1 ? answeredIndex : currentQuestion.correct;
+        }
+
+        let htmlContent = `
+            <div class="mb-6">
+                <h2 class="text-xl sm:text-2xl font-semibold text-orange-600 border-b pb-2 mb-4">
+                    ${currentComp.competence} (Niveau ${currentComp.level})
+                </h2>
+                <div class="text-sm text-gray-500 mb-3 flex justify-between">
+                    <p>Question ${currentQuestionIndex + 1}/${questionsInComp}</p>
+                    <p>Score actuel pour C${currentCompetenceIndex + 1} : <span class="font-bold text-gray-800">${compScore}/5</span></p>
+                </div>
+                <div class="text-lg font-medium text-gray-900">${currentQuestion.question.includes('`') ? `<pre>${currentQuestion.question.replace(/`/g, '')}</pre>` : `<p>${currentQuestion.question}</p>`}</div>
+            </div>
+
+            <div class="space-y-3">
+                ${currentQuestion.options.map((option, index) => {
+                    let buttonClass = 'option-button p-3 border rounded-lg text-left w-full disabled:opacity-100';
+                    let icon = '';
+
+                    if (showResult) {
+                        if (index === currentQuestion.correct) {
+                            // Bonne réponse
+                            buttonClass += ' correct border-green-500 font-bold';
+                            icon = '<span class="ml-auto text-green-600"><svg class="lucide-check-circle" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg></span>';
+                        } else if (index === selectedAnswer && selectedAnswer !== currentQuestion.correct) {
+                            // Mauvaise réponse sélectionnée
+                            buttonClass += ' incorrect border-red-500';
+                            icon = '<span class="ml-auto text-red-600"><svg class="lucide-x-circle" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg></span>';
+                        } else {
+                            // Autres options non sélectionnées
+                            buttonClass += ' bg-white text-gray-700';
+                        }
+                    } else {
+                        // Pas encore répondu
+                        buttonClass += ' bg-white text-gray-700 hover:bg-gray-100';
+                    }
+
+                    return `
+                        <button 
+                            class="${buttonClass}" 
+                            onclick="checkAnswer(${index})"
+                            ${showResult ? 'disabled' : ''}
+                        >
+                            <span class="flex items-center justify-between">
+                                <span>${option.includes('`') ? `<code>${option.replace(/`/g, '')}</code>` : option}</span>
+                                ${icon}
+                            </span>
+                        </button>
+                    `;
+                }).join('')}
+            </div>
+
+            ${showResult ? `
+                <div class="mt-6 p-4 explanation bg-orange-50 rounded-lg text-gray-700">
+                    <p class="font-semibold text-orange-700 mb-1">Explication :</p>
+                    <p>${currentQuestion.explanation}</p>
+                </div>
+            ` : ''}
+            
+            <div class="mt-8 flex justify-between items-center">
+                <button
+                    onclick="previousQuestion()"
+                    class="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors ${currentCompetenceIndex === 0 && currentQuestionIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
+                    ${currentCompetenceIndex === 0 && currentQuestionIndex === 0 ? 'disabled' : ''}
+                >
+                    <svg class="lucide-chevron-left" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                    Précédent
+                </button>
+                
+                ${!showResult ? `
+                    <p class="text-sm text-gray-500">Sélectionnez une option</p>
+                ` : `
+                    <button
+                        onclick="nextQuestion()"
+                        class="flex items-center gap-2 px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+                    >
+                        Suivant
+                        <svg class="lucide-chevron-right" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                    </button>
+                `}
+            </div>
+            
+            ${currentCompetenceIndex === quizData.length - 1 && currentQuestionIndex === questionsInComp - 1 && showResult ? `
+                 <div class="mt-8 pt-4 border-t border-gray-200 text-center">
+                    <p class="text-xl font-bold text-orange-900 mb-2">
+                        Fin du Quiz Avancé !
+                    </p>
+                    <button
+                        onclick="resetQuiz()"
+                        class="flex items-center mx-auto gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                    >
+                        <svg class="lucide-rotate-ccw" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6H9M10 20l-4-4 4-4"></path><path d="M4 16h13a4 4 0 0 0 0-8h-2"></path></svg>
+                        Recommencer tous les quiz
+                    </button>
+                </div>
+            ` : ''}
+        `;
+
+        quizCard.innerHTML = htmlContent;
+    }
+
+    function changeCompetence(index) {
+        currentCompetenceIndex = index;
+        currentQuestionIndex = 0;
+        selectedAnswer = null;
+        showResult = false;
+        
+        // Gère l'état des boutons
+        competenceButtons.forEach((btn, i) => {
+            btn.classList.toggle('active', i === index);
+        });
+
+        // Tente de charger la première question de la compétence
+        const answeredIndex = quizState[currentCompetenceIndex].answered[currentQuestionIndex];
+        if (answeredIndex !== null) {
+            showResult = true;
+            selectedAnswer = answeredIndex !== -1 ? answeredIndex : quizData[currentCompetenceIndex].questions[currentQuestionIndex].correct; 
+        }
+
+        renderQuiz();
+    }
+    
+    // --- Initialization ---
+    competenceButtons.forEach((btn, index) => {
+        btn.addEventListener('click', () => changeCompetence(index));
+    });
+
+    // Rendu initial
+    renderQuiz();
+    updateFinalScoreDisplay();
+</script>
+</body>
+</html>

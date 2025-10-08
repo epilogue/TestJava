@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Certification Java - Niveau Avancé v2 (C1 à C5)</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom Styles for better visual consistency */
+        body {
+            background-color: #e5e7eb; /* Gray-100 */
+        }
+        .container-quiz {
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+        .competence-selector {
+            background-color: #1f2937; /* Gray-800 */
+        }
+        .competence-btn.active {
+            border-bottom: 3px solid #f97316; /* Orange-500 */
+            color: #f97316;
+        }
+        .option-button {
+            transition: all 0.2s;
+        }
+        .option-button:hover:not(.disabled) {
+            background-color: #f3f4f6; /* Gray-100 */
+        }
+        .option-button.correct {
+            background-color: #d1fae5; /* Green-100 */
+            border-color: #10b981; /* Green-500 */
+            pointer-events: none;
+        }
+        .option-button.incorrect {
+            background-color: #fee2e2; /* Red-100 */
+            border-color: #ef4444; /* Red-500 */
+            pointer-events: none;
+        }
+        .explanation {
+            border-left: 4px solid #f97316; /* Orange-500 */
+        }
+        pre {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-quiz p-4">
+    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-4">
+        Quiz Avancé (v2) - Certification Java (C1 à C5) 🎓
+    </h1>
+    
+    <div class="competence-selector p-3 rounded-t-lg shadow-lg flex flex-wrap justify-center space-x-2 sm:space-x-4">
+        <button data-comp="0" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition active">C1</button>
+        <button data-comp="1" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C2</button>
+        <button data-comp="2" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C3</button>
+        <button data-comp="3" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C4</button>
+        <button data-comp="4" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C5</button>
+    </div>
+
+    <div id="quiz-card" class="bg-white rounded-b-lg shadow-lg p-6 sm:p-8">
+        </div>
+
+    <div class="bg-white rounded-lg shadow p-4 text-sm text-gray-600 mt-6">
+        <p class="font-semibold mb-2">📋 Informations sur le quiz :</p>
+        <ul class="space-y-1">
+            <li>• Niveau de difficulté : **Avancé**</li>
+            <li>• Chaque quiz contient **5 nouvelles questions** (QCM/QCU) spécifiques à la compétence.</li>
+            <li>• Score cumulé total : <span id="final-score" class="font-bold text-orange-600"></span></li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        // --- C1 : Éléments fondamentaux et algorithmie (Avancé v2) ---
+        {
+          competence: "C1 - Éléments fondamentaux et algorithmie",
+          level: "Avancé",
+          questions: [
+            {
+              question: "Quelle est la différence entre les opérateurs de décalage de bits `>>` et `>>>` en Java ?",
+              options: [
+                "`>>` est un décalage arithmétique (préserve le signe), `>>>` est un décalage logique (remplit avec 0).",
+                "`>>` est plus rapide que `>>>`.",
+                "`>>>` est un décalage arithmétique, `>>` est un décalage logique.",
+                "Ils sont interchangeables pour les nombres positifs."
+              ],
+              correct: 0,
+              explanation: "Le décalage arithmétique `>>` conserve le bit de signe (le bit le plus à gauche), tandis que le décalage logique non signé `>>>` insère toujours un 0, ce qui peut changer le signe d'un nombre négatif."
+            },
+            {
+              question: "Si `String s1 = new String(\"test\");` et `String s2 = s1.intern();`, que retourne `s1 == s2` ?",
+              options: [
+                "true",
+                "false",
+                "Le code ne compile pas.",
+                "Le résultat est imprévisible."
+              ],
+              correct: 1,
+              explanation: "La méthode `intern()` retourne une référence du pool de chaînes. `s1` est sur le tas, `s2` est dans le pool. Leurs références mémoire sont donc différentes. En revanche, `\"test\" == s2` retournerait `true`."
+            },
+            {
+              question: "Quel est le problème principal avec l'utilisation de `double` ou `float` pour des calculs monétaires précis ?",
+              options: [
+                "Ils ne peuvent pas stocker de grands nombres.",
+                "Ils sont plus lents que les types entiers.",
+                "Ils peuvent introduire des erreurs d'arrondi dues à la représentation binaire des fractions.",
+                "Ils ne gèrent pas les nombres négatifs."
+              ],
+              correct: 2,
+              explanation: "Les types à virgule flottante binaire ne peuvent pas représenter exactement toutes les fractions décimales, ce qui entraîne des erreurs de précision. Il faut privilégier `BigDecimal` pour les calculs financiers."
+            },
+            {
+              question: "Qu'est-ce qu'une `ArrayStoreException` ?",
+              options: [
+                "Une erreur qui se produit lorsqu'on essaie d'accéder à un index de tableau hors limites.",
+                "Une erreur qui se produit lorsqu'on essaie de stocker un objet d'un type incompatible dans un tableau.",
+                "Une erreur levée quand le tableau est `null`.",
+                "Une erreur de compilation lors de la déclaration d'un tableau."
+              ],
+              correct: 1,
+              explanation: "Cette exception d'exécution se produit, par exemple, si vous avez un `Object[] a = new String[1];` et que vous tentez de faire `a[0] = 1;`. Le compilateur l'autorise (covariance des tableaux), mais l'exécution échoue."
+            },
+            {
+              question: "Que fait une instruction `continue monLabel;` dans des boucles imbriquées ?",
+              options: [
+                "Elle termine la boucle externe identifiée par `monLabel`.",
+                "Elle saute l'itération en cours de la boucle la plus interne.",
+                "Elle saute à la prochaine itération de la boucle externe identifiée par `monLabel`.",
+                "C'est une syntaxe invalide."
+              ],
+              correct: 2,
+              explanation: "Contrairement à `break label;` qui termine la boucle, `continue label;` saute le reste de l'itération de la boucle externe et continue avec son incrémentation et sa prochaine vérification."
+            }
+          ]
+        },
+        
+        // --- C2 : Programmation Orientée Objet (Avancé v2) ---
+        {
+          competence: "C2 - Programmation Orientée Objet",
+          level: "Avancé",
+          questions: [
+            {
+              question: "Qu'est-ce que le 'binding dynamique' (dynamic binding) en Java ?",
+              options: [
+                "La liaison d'une méthode au moment de la compilation, basée sur le type de la référence.",
+                "La liaison d'une méthode au moment de l'exécution, basée sur le type réel de l'objet.",
+                "La conversion automatique d'un type primitif en son wrapper.",
+                "Le processus de chargement d'une classe par la JVM."
+              ],
+              correct: 1,
+              explanation: "Le binding dynamique (ou late binding) est le mécanisme qui permet au polymorphisme de fonctionner. La JVM détermine quelle version d'une méthode redéfinie appeler au moment de l'exécution."
+            },
+            {
+              question: "Qu'est-ce qu'un 'type de retour covariant' (covariant return type) ?",
+              options: [
+                "La capacité pour une méthode redéfinie de retourner un type parent du type de retour original.",
+                "La capacité pour une méthode redéfinie de retourner un sous-type du type de retour original.",
+                "La capacité de retourner plusieurs types de données différents.",
+                "Une méthode qui retourne toujours `void`."
+              ],
+              correct: 1,
+              explanation: "Depuis Java 5, une méthode redéfinie dans une classe enfant peut retourner un type plus spécifique (un sous-type) que celui déclaré dans la méthode de la classe parente."
+            },
+            {
+              question: "Une classe interne non-statique (inner class) peut-elle accéder aux membres privés de sa classe externe ?",
+              options: [
+                "Non, jamais.",
+                "Oui, sans restriction.",
+                "Uniquement si les membres sont déclarés `final`.",
+                "Uniquement via des getters publics."
+              ],
+              correct: 1,
+              explanation: "Une classe interne non-statique a une référence implicite à une instance de sa classe externe, ce qui lui donne un accès direct à tous ses membres, y compris les membres `private`."
+            },
+            {
+              question: "Quel est un cas d'utilisation courant pour un constructeur privé (`private`) ?",
+              options: [
+                "Empêcher la classe d'être utilisée.",
+                "Forcer l'utilisation de méthodes `static` pour la création d'objets (ex: pattern Singleton ou Factory Method).",
+                "Rendre la classe plus sécurisée.",
+                "Permettre uniquement aux classes enfants de l'instancier."
+              ],
+              correct: 1,
+              explanation: "Un constructeur privé empêche l'instanciation directe depuis l'extérieur. C'est la base du pattern Singleton, qui garantit une seule instance, ou des classes utilitaires qui ne doivent pas être instanciées."
+            },
+            {
+              question: "Si la classe `A` implémente l'interface `I`, que retourne `new A() instanceof I` ?",
+              options: [
+                "true",
+                "false",
+                "Le code ne compile pas car `instanceof` ne fonctionne pas avec les interfaces.",
+                "Cela dépend de la présence d'une méthode `default` dans l'interface."
+              ],
+              correct: 0,
+              explanation: "L'opérateur `instanceof` vérifie la relation 'est-un' (is-a). Si une classe implémente une interface, une instance de cette classe est considérée comme une instance du type de l'interface."
+            }
+          ]
+        },
+        
+        // --- C3 : Concepts avancés POO (Avancé v2) ---
+        {
+          competence: "C3 - Concepts avancés POO",
+          level: "Avancé",
+          questions: [
+            {
+              question: "Une variable locale utilisée dans une expression lambda doit être :",
+              options: [
+                "Déclarée `final`.",
+                "Effectivement finale (effectively final).",
+                "`static`.",
+                "Mutable."
+              ],
+              correct: 1,
+              explanation: "Une variable locale doit être 'effectivement finale', ce qui signifie que sa valeur n'est pas modifiée après son initialisation. Elle n'a pas besoin d'être explicitement déclarée `final`."
+            },
+            {
+              question: "Que représente la syntaxe `String::length` ?",
+              options: [
+                "Un appel direct à la méthode `length`.",
+                "Une référence à une méthode d'instance non liée (`unbound method reference`).",
+                "Une référence à une méthode statique.",
+                "Une expression lambda."
+              ],
+              correct: 1,
+              explanation: "C'est une référence de méthode qui pointe vers la méthode `length()` de la classe `String`. Elle peut être utilisée dans un contexte où une interface fonctionnelle attend une fonction qui prend un `String` et retourne un `int`."
+            },
+            {
+              question: "Dans quel cas est-il préférable de créer une exception non-vérifiée (unchecked) plutôt qu'une exception vérifiée (checked) ?",
+              options: [
+                "Pour les erreurs de programmation (bugs) qui ne devraient pas se produire, comme une violation de précondition.",
+                "Pour les erreurs externes récupérables, comme un problème de réseau.",
+                "Pour toutes les erreurs d'entrée/sortie.",
+                "Il n'y a jamais de bonne raison de préférer une exception non-vérifiée."
+              ],
+              correct: 0,
+              explanation: "Les exceptions non-vérifiées (`RuntimeException`) sont idéales pour signaler des erreurs de logique interne (bugs) qui ne peuvent pas être raisonnablement gérées par l'appelant."
+            },
+            {
+              question: "Peut-on ajouter un constructeur et des méthodes à une énumération (`enum`) en Java ?",
+              options: [
+                "Non, une énumération ne peut contenir que des constantes.",
+                "Oui, on peut ajouter des constructeurs (qui doivent être privés) et des méthodes.",
+                "Seulement des méthodes statiques.",
+                "Seulement des constructeurs publics."
+              ],
+              correct: 1,
+              explanation: "Les énumérations sont des classes à part entière et peuvent avoir des attributs, des constructeurs (toujours privés ou package-private) et des méthodes pour associer des données et des comportements à chaque constante."
+            },
+            {
+              question: "Quelle est la principale différence entre `List.of()` et `new ArrayList<>()` ?",
+              options: [
+                "`List.of()` crée une liste mutable, `ArrayList` une liste immuable.",
+                "`List.of()` est plus ancien et moins performant.",
+                "`List.of()` crée une liste immuable (non modifiable), `new ArrayList<>()` crée une liste mutable.",
+                "`List.of()` ne peut pas contenir d'éléments `null`."
+              ],
+              correct: 2,
+              explanation: "Les méthodes de fabrique comme `List.of()` (introduites en Java 9) créent des collections immuables, ce qui les rend sûres pour le partage et le multithreading, mais elles ne peuvent pas être modifiées après création."
+            }
+          ]
+        },
+        
+        // --- C4 : Collections, Streams et API de dates (Avancé v2) ---
+        {
+          competence: "C4 - Collections, Streams et API de dates",
+          level: "Avancé",
+          questions: [
+            {
+              question: "Dans l'API Stream, que fait `collect(Collectors.groupingBy(...))` ?",
+              options: [
+                "Regroupe les éléments en une seule chaîne de caractères.",
+                "Trie les éléments du stream.",
+                "Partitionne le stream en deux listes (vrai/faux).",
+                "Regroupe les éléments en une `Map` où les clés sont le résultat d'une fonction de classification."
+              ],
+              correct: 3,
+              explanation: "`groupingBy` est un collecteur puissant pour effectuer des opérations similaires au `GROUP BY` de SQL, en organisant les éléments en catégories."
+            },
+            {
+              question: "Considérez `Optional<String> opt;`. Quelle est la différence entre `opt.map(String::toUpperCase)` et `opt.flatMap(s -> Optional.of(s.toUpperCase()))` ?",
+              options: [
+                "`map` retourne `Optional<Optional<String>>`, `flatMap` retourne `Optional<String>`.",
+                "`flatMap` retourne `Optional<Optional<String>>`, `map` retourne `Optional<String>`.",
+                "Il n'y a aucune différence, le résultat est le même.",
+                "`flatMap` est utilisé uniquement si la fonction de mapping peut retourner `null`."
+              ],
+              correct: 0,
+              explanation: "Le rôle de `flatMap` sur un `Optional` est d'appliquer une fonction qui retourne déjà un `Optional`, puis d'aplatir le résultat pour éviter d'obtenir un `Optional` imbriqué."
+            },
+            {
+              question: "Comment peut-on créer un `Stream` parallèle à partir d'une `List` ?",
+              options: [
+                "En utilisant `new ParallelStream(list)`.",
+                "En appelant `list.parallelStream()`.",
+                "En appelant `list.stream().parallel()`.",
+                "Les réponses B et C sont toutes les deux correctes."
+              ],
+              correct: 3,
+              explanation: "On peut soit obtenir un stream parallèle directement avec `parallelStream()`, soit convertir un stream séquentiel existant en parallèle avec `parallel()`. Les deux approches sont valides."
+            },
+            {
+              question: "Quelle classe de `java.time` est la plus appropriée pour représenter un décalage horaire par rapport à l'UTC, comme `+02:00` ?",
+              options: [
+                "`ZoneId`",
+                "`ZoneOffset`",
+                "`ZonedDateTime`",
+                "`Period`"
+              ],
+              correct: 1,
+              explanation: "`ZoneOffset` représente un décalage fixe par rapport à l'UTC, tandis que `ZoneId` représente des règles de fuseau horaire plus complexes (comme 'Europe/Paris') qui tiennent compte de l'heure d'été."
+            },
+            {
+              question: "Quelle est la différence entre un `reduce` avec une identité et un `reduce` sans identité dans l'API Stream ?",
+              options: [
+                "Le `reduce` avec identité retourne un `Optional`, celui sans identité retourne directement la valeur.",
+                "Le `reduce` sans identité retourne un `Optional`, celui avec identité retourne directement la valeur.",
+                "Le `reduce` avec identité ne peut être utilisé que sur des streams de nombres.",
+                "Il n'y a pas de `reduce` sans identité."
+              ],
+              correct: 1,
+              explanation: "Si le stream est vide, le `reduce` sans identité n'a pas de valeur à retourner, il renvoie donc un `Optional.empty()`. Le `reduce` avec une valeur d'identité peut retourner cette identité, donc il renvoie directement le type d'objet."
+            }
+          ]
+        },
+        
+        // --- C5 : Connexion à une base de données avec JDBC (Avancé v2) ---
+        {
+          competence: "C5 - Connexion à une base de données avec JDBC",
+          level: "Avancé",
+          questions: [
+            {
+              question: "Quel est l'avantage principal d'utiliser une `DataSource` plutôt que `DriverManager` pour obtenir des connexions ?",
+              options: [
+                "C'est la seule façon d'utiliser des transactions.",
+                "Cela permet une configuration centralisée et la mise en commun des connexions (connection pooling).",
+                "C'est plus sécurisé car cela chiffre toujours les mots de passe.",
+                "C'est une API plus ancienne et plus stable."
+              ],
+              correct: 1,
+              explanation: "Une `DataSource` abstrait les détails de la connexion et est la base pour des fonctionnalités avancées comme le pooling, qui réutilise les connexions pour améliorer considérablement les performances."
+            },
+            {
+              question: "Comment un `CallableStatement` gère-t-il un paramètre de sortie (OUT parameter) d'une procédure stockée ?",
+              options: [
+                "Il le retourne directement via la méthode `execute()`.",
+                "Il faut d'abord l'enregistrer avec `registerOutParameter()`, puis le récupérer après exécution.",
+                "Les paramètres de sortie sont automatiquement mappés sur des variables locales.",
+                "Ce n'est pas possible, JDBC ne gère que les paramètres d'entrée."
+              ],
+              correct: 1,
+              explanation: "Pour les paramètres de sortie, il faut indiquer à JDBC leur type avant l'exécution avec `registerOutParameter()`, puis utiliser les méthodes `get...()` correspondantes pour lire leur valeur après l'appel."
+            },
+            {
+              question: "Qu'est-ce qu'un `ResultSet` de type `TYPE_SCROLL_SENSITIVE` ?",
+              options: [
+                "Un `ResultSet` qui est insensible aux changements faits par d'autres transactions.",
+                "Un `ResultSet` qui peut voir les mises à jour, insertions et suppressions faites par d'autres transactions.",
+                "Un `ResultSet` qui ne peut être parcouru qu'en avant.",
+                "Un `ResultSet` qui est sensible à la casse (case-sensitive) pour les noms de colonnes."
+              ],
+              correct: 1,
+              explanation: "Un `ResultSet` sensible au défilement tente de refléter les changements effectués sur les données sous-jacentes par d'autres transactions après sa création, bien que le support dépende du driver JDBC."
+            },
+            {
+              question: "Que signifie un `BatchUpdateException` ?",
+              options: [
+                "Toutes les commandes du lot ont échoué.",
+                "La connexion à la base de données a été perdue pendant le traitement par lot.",
+                "Au moins une des commandes dans un traitement par lot a échoué.",
+                "Le lot contenait trop de commandes."
+              ],
+              correct: 2,
+              explanation: "Cette exception est levée lorsque `executeBatch()` échoue. Elle contient des informations sur le nombre de commandes qui ont réussi avant l'échec, permettant une gestion d'erreur plus fine."
+            },
+            {
+              question: "Quel niveau d'isolation de transaction empêche les 'lectures sales' (dirty reads) mais autorise les 'lectures non reproductibles' (non-repeatable reads) ?",
+              options: [
+                "`TRANSACTION_READ_UNCOMMITTED`",
+                "`TRANSACTION_READ_COMMITTED`",
+                "`TRANSACTION_REPEATABLE_READ`",
+                "`TRANSACTION_SERIALIZABLE`"
+              ],
+              correct: 1,
+              explanation: "`READ_COMMITTED` garantit qu'une transaction ne lit que des données qui ont été validées (commit), évitant les lectures sales. Cependant, si elle relit les mêmes données, elles peuvent avoir été modifiées par une autre transaction entre-temps."
+            }
+          ]
+        }
+    ];
+
+    let currentCompetenceIndex = 0;
+    let currentQuestionIndex = 0;
+    let selectedAnswer = null;
+    let showResult = false;
+    // Stockage du score et des réponses par compétence: [score, reponse_index_selectionné_par_question]
+    let quizState = quizData.map(comp => ({
+        score: 0,
+        answered: Array(comp.questions.length).fill(null), // null: non répondu, -1: réponse incorrecte, index: réponse correcte
+        isCompleted: false
+    }));
+
+    const quizCard = document.getElementById('quiz-card');
+    const competenceButtons = document.querySelectorAll('.competence-btn');
+    const finalScoreDisplay = document.getElementById('final-score');
+
+    const TOTAL_QUESTIONS = quizData.reduce((sum, comp) => sum + comp.questions.length, 0);
+
+    // --- Core Logic ---
+
+    function updateFinalScoreDisplay() {
+        const totalScore = quizState.reduce((sum, state) => sum + state.score, 0);
+        finalScoreDisplay.textContent = `${totalScore}/${TOTAL_QUESTIONS} (${Math.round((totalScore / TOTAL_QUESTIONS) * 100)}%)`;
+    }
+
+    function checkAnswer(selectedIndex) {
+        if (showResult) return; // Empêche de répondre deux fois
+
+        const currentCompState = quizState[currentCompetenceIndex];
+        const currentQuestion = quizData[currentCompetenceIndex].questions[currentQuestionIndex];
+        
+        selectedAnswer = selectedIndex;
+        showResult = true;
+
+        // Mise à jour de l'état (score et réponse)
+        if (selectedIndex === currentQuestion.correct) {
+            currentCompState.score++;
+            currentCompState.answered[currentQuestionIndex] = selectedIndex; // Stocke l'index de la réponse correcte
+        } else {
+             currentCompState.answered[currentQuestionIndex] = -1; // -1 pour incorrect
+        }
+        
+        if (currentQuestionIndex === quizData[currentCompetenceIndex].questions.length - 1) {
+            currentCompState.isCompleted = true;
+        }
+
+        renderQuiz();
+        updateFinalScoreDisplay();
+    }
+
+    function nextQuestion() {
+        showResult = false;
+        selectedAnswer = null;
+        
+        const questionsInComp = quizData[currentCompetenceIndex].questions.length;
+
+        if (currentQuestionIndex < questionsInComp - 1) {
+            // Passer à la question suivante dans la même compétence
+            currentQuestionIndex++;
+        } else {
+            // Passer à la compétence suivante si la question actuelle est la dernière
+            if (currentCompetenceIndex < quizData.length - 1) {
+                currentCompetenceIndex++;
+                currentQuestionIndex = 0;
+                // Met à jour l'état des boutons de compétence
+                competenceButtons.forEach(btn => btn.classList.remove('active'));
+                competenceButtons[currentCompetenceIndex].classList.add('active');
+            } else {
+                // Quiz entièrement terminé
+                return;
+            }
+        }
+        renderQuiz();
+    }
+    
+    function previousQuestion() {
+        showResult = false;
+        selectedAnswer = null;
+        
+        if (currentQuestionIndex > 0) {
+            // Revenir à la question précédente dans la même compétence
+            currentQuestionIndex--;
+        } else {
+            // Revenir à la compétence précédente
+            if (currentCompetenceIndex > 0) {
+                currentCompetenceIndex--;
+                currentQuestionIndex = quizData[currentCompetenceIndex].questions.length - 1;
+                // Met à jour l'état des boutons de compétence
+                competenceButtons.forEach(btn => btn.classList.remove('active'));
+                competenceButtons[currentCompetenceIndex].classList.add('active');
+            } else {
+                // Première question de la première compétence
+                return;
+            }
+        }
+        
+        // Si on revient à une question déjà répondue, afficher la réponse enregistrée
+        const answeredState = quizState[currentCompetenceIndex].answered[currentQuestionIndex];
+        if (answeredState !== null) {
+            showResult = true;
+            // Si la réponse était correcte, selectedAnswer doit être l'index correct pour le rendu
+            selectedAnswer = answeredState !== -1 ? answeredState : quizData[currentCompetenceIndex].questions[currentQuestionIndex].correct; 
+        }
+
+        renderQuiz();
+    }
+
+    function resetQuiz() {
+        quizState = quizData.map(comp => ({
+            score: 0,
+            answered: Array(comp.questions.length).fill(null),
+            isCompleted: false
+        }));
+        currentCompetenceIndex = 0;
+        currentQuestionIndex = 0;
+        selectedAnswer = null;
+        showResult = false;
+        competenceButtons.forEach(btn => btn.classList.remove('active'));
+        competenceButtons[0].classList.add('active');
+        renderQuiz();
+        updateFinalScoreDisplay();
+    }
+
+
+    // --- Rendering Logic (HTML Generation) ---
+
+    function renderQuiz() {
+        const currentComp = quizData[currentCompetenceIndex];
+        const currentQuestion = currentComp.questions[currentQuestionIndex];
+        const questionsInComp = currentComp.questions.length;
+        const compScore = quizState[currentCompetenceIndex].score;
+        
+        // Vérifie si la question a été répondue pour restaurer l'état
+        const answeredIndex = quizState[currentCompetenceIndex].answered[currentQuestionIndex];
+        const isAnswered = answeredIndex !== null;
+        
+        if (isAnswered && !showResult) {
+             showResult = true;
+             // Si la réponse était incorrecte (-1), on affiche la bonne réponse pour le rendu
+             selectedAnswer = answeredIndex !== -1 ? answeredIndex : currentQuestion.correct;
+        }
+
+        let htmlContent = `
+            <div class="mb-6">
+                <h2 class="text-xl sm:text-2xl font-semibold text-orange-600 border-b pb-2 mb-4">
+                    ${currentComp.competence} (Niveau ${currentComp.level})
+                </h2>
+                <div class="text-sm text-gray-500 mb-3 flex justify-between">
+                    <p>Question ${currentQuestionIndex + 1}/${questionsInComp}</p>
+                    <p>Score actuel pour C${currentCompetenceIndex + 1} : <span class="font-bold text-gray-800">${compScore}/5</span></p>
+                </div>
+                <div class="text-lg font-medium text-gray-900">${currentQuestion.question.includes('`') ? `<pre>${currentQuestion.question.replace(/`/g, '')}</pre>` : `<p>${currentQuestion.question}</p>`}</div>
+            </div>
+
+            <div class="space-y-3">
+                ${currentQuestion.options.map((option, index) => {
+                    let buttonClass = 'option-button p-3 border rounded-lg text-left w-full disabled:opacity-100';
+                    let icon = '';
+
+                    if (showResult) {
+                        if (index === currentQuestion.correct) {
+                            // Bonne réponse
+                            buttonClass += ' correct border-green-500 font-bold';
+                            icon = '<span class="ml-auto text-green-600"><svg class="lucide-check-circle" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg></span>';
+                        } else if (index === selectedAnswer && selectedAnswer !== currentQuestion.correct) {
+                            // Mauvaise réponse sélectionnée
+                            buttonClass += ' incorrect border-red-500';
+                            icon = '<span class="ml-auto text-red-600"><svg class="lucide-x-circle" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg></span>';
+                        } else {
+                            // Autres options non sélectionnées
+                            buttonClass += ' bg-white text-gray-700';
+                        }
+                    } else {
+                        // Pas encore répondu
+                        buttonClass += ' bg-white text-gray-700 hover:bg-gray-100';
+                    }
+
+                    return `
+                        <button 
+                            class="${buttonClass}" 
+                            onclick="checkAnswer(${index})"
+                            ${showResult ? 'disabled' : ''}
+                        >
+                            <span class="flex items-center justify-between">
+                                <span>${option.includes('`') ? `<code>${option.replace(/`/g, '')}</code>` : option}</span>
+                                ${icon}
+                            </span>
+                        </button>
+                    `;
+                }).join('')}
+            </div>
+
+            ${showResult ? `
+                <div class="mt-6 p-4 explanation bg-orange-50 rounded-lg text-gray-700">
+                    <p class="font-semibold text-orange-700 mb-1">Explication :</p>
+                    <p>${currentQuestion.explanation}</p>
+                </div>
+            ` : ''}
+            
+            <div class="mt-8 flex justify-between items-center">
+                <button
+                    onclick="previousQuestion()"
+                    class="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors ${currentCompetenceIndex === 0 && currentQuestionIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
+                    ${currentCompetenceIndex === 0 && currentQuestionIndex === 0 ? 'disabled' : ''}
+                >
+                    <svg class="lucide-chevron-left" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                    Précédent
+                </button>
+                
+                ${!showResult ? `
+                    <p class="text-sm text-gray-500">Sélectionnez une option</p>
+                ` : `
+                    <button
+                        onclick="nextQuestion()"
+                        class="flex items-center gap-2 px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+                    >
+                        Suivant
+                        <svg class="lucide-chevron-right" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                    </button>
+                `}
+            </div>
+            
+            ${currentCompetenceIndex === quizData.length - 1 && currentQuestionIndex === questionsInComp - 1 && showResult ? `
+                 <div class="mt-8 pt-4 border-t border-gray-200 text-center">
+                    <p class="text-xl font-bold text-orange-900 mb-2">
+                        Fin du Quiz Avancé !
+                    </p>
+                    <button
+                        onclick="resetQuiz()"
+                        class="flex items-center mx-auto gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                    >
+                        <svg class="lucide-rotate-ccw" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6H9M10 20l-4-4 4-4"></path><path d="M4 16h13a4 4 0 0 0 0-8h-2"></path></svg>
+                        Recommencer tous les quiz
+                    </button>
+                </div>
+            ` : ''}
+        `;
+
+        quizCard.innerHTML = htmlContent;
+    }
+
+    function changeCompetence(index) {
+        currentCompetenceIndex = index;
+        currentQuestionIndex = 0;
+        selectedAnswer = null;
+        showResult = false;
+        
+        // Gère l'état des boutons
+        competenceButtons.forEach((btn, i) => {
+            btn.classList.toggle('active', i === index);
+        });
+
+        // Tente de charger la première question de la compétence
+        const answeredIndex = quizState[currentCompetenceIndex].answered[currentQuestionIndex];
+        if (answeredIndex !== null) {
+            showResult = true;
+            selectedAnswer = answeredIndex !== -1 ? answeredIndex : quizData[currentCompetenceIndex].questions[currentQuestionIndex].correct; 
+        }
+
+        renderQuiz();
+    }
+    
+    // --- Initialization ---
+    competenceButtons.forEach((btn, index) => {
+        btn.addEventListener('click', () => changeCompetence(index));
+    });
+
+    // Rendu initial
+    renderQuiz();
+    updateFinalScoreDisplay();
+</script>
+</body>
+</html>

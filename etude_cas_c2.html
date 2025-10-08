@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C2 - Études de Cas Java (Programmation Orientée Objet)</title>
+    <style>
+        /* Base Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        h1 {
+            color: #cc6600; /* Couleur pour C2 */
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Level Toggle Buttons */
+        .level-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .level-btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            transition: all 0.2s;
+        }
+        .level-btn:hover {
+            border-color: #ff9933;
+            color: #ff9933;
+        }
+        .level-btn.active {
+            background-color: #cc6600;
+            color: #fff;
+            border-color: #cc6600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Exercise Card */
+        .exercise-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .exercise-card h3 {
+            font-size: 1.5rem;
+            color: #cc6600; /* Couleur C2 */
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .exercise-card p.criteria {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Solution/Code Block */
+        .solution-toggle {
+            display: block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #ffeedd;
+            color: #cc6600;
+            border: 1px solid #ffddbb;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .solution-toggle:hover {
+            background-color: #ffddbb;
+        }
+        
+        .solution-content {
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .solution-content.hidden {
+            display: none;
+        }
+        .solution-content pre {
+            margin: 0;
+            padding: 1rem;
+            background-color: #272822; /* Fond pour le code */
+            color: #f8f8f2;
+            overflow-x: auto;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        /* Color Coding for Levels (C2-specific) */
+        .level-debutant { border-left: 5px solid #10b981; }
+        .level-intermediaire { border-left: 5px solid #f97316; }
+        .level-avance { border-left: 5px solid #cc6600; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>C2 : Programmation Orientée Objet (POO) - Études de Cas (15/15)</h1>
+    <p style="text-align: center; margin-bottom: 2rem;">Sélectionnez un niveau de difficulté pour afficher les 5 exercices correspondants de la compétence C2.</p>
+
+    <div class="level-selector">
+        <button class="level-btn active" data-level="debutant">Débutant (5 Cas)</button>
+        <button class="level-btn" data-level="intermediaire">Intermédiaire (5 Cas)</button>
+        <button class="level-btn" data-level="avance">Avancé (5 Cas)</button>
+    </div>
+
+    <div id="exercises-container">
+        </div>
+
+</div>
+
+<script>
+    const allStudies = [
+        // --- NIVEAU DÉBUTANT (5 CAS) ---
+        {
+            level: "debutant",
+            title: "Étude de Cas 1 : Classe, Attributs et Instanciation",
+            criteria: "(Critères visés : Cr1, Cr2, Cr6 - Classe, Attributs typés, Instanciation)",
+            problem: "Créez une classe Java nommée **Client** avec deux attributs publics : `numero` (entier) et `nom` (String). <br>Écrivez une classe principale `TestClient` qui instancie un objet `Client` en utilisant l'opérateur `new`,<br> lui assigne les valeurs `101` et `'Dupont'` directement,<br> puis affiche ces valeurs.",
+            solution: `class Client {
+    // Cr2 : Attributs déclarés et typés
+    public int numero;
+    public String nom;
+}
+
+// Cr1 : Classe créée (dans un fichier TestClient.java)
+public class TestClient {
+    public static void main(String[] args) {
+        // Cr6 : Instanciation de l'objet
+        Client c = new Client();
+        
+        // Manipulation de l'objet
+        c.numero = 101;
+        c.nom = "Dupont";
+        
+        System.out.println("Numéro du client : " + c.numero);
+        System.out.println("Nom du client : " + c.nom);
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 2 : Constructeurs et Méthode Simple",
+            criteria: "(Critères visés : Cr4, Cr6 - Constructeur, Méthode, Instanciation)",
+            problem: "Modifiez la classe **Client** pour inclure :<br> 1. Un **constructeur** qui prend le numéro et le nom en paramètres.<br>2. Une **méthode**  nommée `afficherDetails()` qui affiche le numéro et le nom du client.<br> Mettez à jour la classe `TestClient` pour utiliser le constructeur et appeler la méthode.",
+            solution: `class Client {
+    public int numero;
+    public String nom;
+    
+    // Cr4 : Constructeur implémenté
+    public Client(int numero, String nom) {
+        this.numero = numero; // Utilisation de this
+        this.nom = nom;
+    }
+    
+    // Cr5 : Méthode d'instance implémentée
+    public void afficherDetails() {
+        System.out.println("Client ID : " + this.numero + ", Nom : " + this.nom);
+    }
+}
+
+public class TestClient {
+    public static void main(String[] args) {
+        // Utilisation du constructeur (Cr6)
+        Client c2 = new Client(205, "Martin");
+        
+        // Appel de la méthode
+        c2.afficherDetails();
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 3 : Variables d'Instance vs Variables Locales",
+            criteria: "(Critères visés : Cr3, Cr5 - Différenciation de variables, Méthode)",
+            problem: "Créez une classe **Produit** (attributs `nom`, `prixHT`).<br> Ajoutez une méthode `calculerPrixTTC(tauxTVA)` qui calcule le prix TTC en utilisant `prixHT` (instance) et `tauxTVA` (local/paramètre),<br> puis utilise une variable `prixTTC` (locale) pour le résultat.<br> Affichez les trois valeurs dans la méthode.",
+            solution: `class Produit {
+    private String nom; // Variable d'instance (Cr3)
+    private double prixHT;
+
+    public Produit(String nom, double prixHT) {
+        this.nom = nom;
+        this.prixHT = prixHT;
+    }
+    
+    // Cr5 : Méthode utilisant différents types de variables
+    public void calculerPrixTTC(double tauxTVA) {
+        double prixTTC = this.prixHT * (1 + tauxTVA / 100); // Variable locale (Cr3)
+        System.out.println("Produit : " + this.nom);
+        System.out.println("Prix HT (Instance) : " + this.prixHT);
+        System.out.println("Taux TVA (Paramètre) : " + tauxTVA + "%");
+        System.out.println("Prix TTC (Locale) : " + prixTTC);
+    }
+}
+
+public class TestProduit {
+    public static void main(String[] args) {
+        Produit p = new Produit("Ecran", 250.0);
+        p.calculerPrixTTC(20.0); // 20.0 est le paramètre local
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 4 : Surcharge de Méthode (Overloading)",
+            criteria: "(Critère visé : Cr5 - Surcharge de méthode)",
+            problem: "Créez une classe utilitaire **Calculateur** avec une méthode `calculerSurface()`. <br>1. Surchargez-la pour qu'elle prenne un seul paramètre (`double rayon`) pour calculer la surface d'un cercle (π * r²). <br>2. Surchargez-la pour qu'elle prenne deux paramètres (`double longueur`, `double largeur`) pour calculer la surface d'un rectangle. (Utilisez `3.14` pour π).",
+            solution: `class Calculateur {
+    
+    // Cr5 : Méthode 1 (Cercle)
+    public double calculerSurface(double rayon) {
+        return 3.14 * rayon * rayon;
+    }
+    
+    // Cr5 : Méthode 2 (Rectangle) - Surcharge de méthode (Overloading)
+    public double calculerSurface(double longueur, double largeur) {
+        return longueur * largeur;
+    }
+}
+
+public class TestSurcharge {
+    public static void main(String[] args) {
+        Calculateur c = new Calculateur();
+        System.out.println("Surface du Cercle (rayon 5) : " + c.calculerSurface(5.0));
+        System.out.println("Surface du Rectangle (10x4) : " + c.calculerSurface(10.0, 4.0));
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 5 : Méthode avec Valeur de Retour",
+            criteria: "(Critère visé : Cr5 - Méthode avec retour, Cr6 - Manipulation d'objet)",
+            problem: "Créez une classe **CompteBancaire** (attribut `solde`). Créez une méthode `retirer(double montant)` qui doit : <br>1. Soustraire le montant du solde **seulement** si le solde est suffisant (solde >= montant). <br>2. Retourner un `boolean` (`true` en cas de succès, `false` sinon).<br> Testez la méthode dans `main` pour un retrait réussi puis un retrait échoué.",
+            solution: `class CompteBancaire {
+    private double solde;
+    
+    public CompteBancaire(double soldeInitial) {
+        this.solde = soldeInitial;
+    }
+    
+    // Cr5 : Méthode avec valeur de retour (boolean)
+    public boolean retirer(double montant) {
+        if (this.solde >= montant) {
+            this.solde -= montant; // Opération réussie
+            return true;
+        } else {
+            return false; // Échec
+        }
+    }
+    
+    public double getSolde() {
+        return solde;
+    }
+}
+
+public class TestCompte {
+    public static void main(String[] args) {
+        CompteBancaire compte = new CompteBancaire(500.0);
+        
+        System.out.println("Retrait de 200€ : " + (compte.retirer(200.0) ? "OK" : "Échec"));
+        System.out.println("Nouveau solde : " + compte.getSolde());
+        
+        System.out.println("Retrait de 400€ : " + (compte.retirer(400.0) ? "OK" : "Échec"));
+        System.out.println("Nouveau solde : " + compte.getSolde());
+    }
+}`
+        },
+        
+        // --- NIVEAU INTERMÉDIAIRE (5 CAS) ---
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 6 : Encapsulation et Variable de Classe (Static)",
+            criteria: "(Critères visés : Cr7, Cr3 - Encapsulation, Variable de classe)",
+            problem: "Modifiez la classe **Client** pour appliquer l'**encapsulation**: tous les attributs d'instance doivent être `private`. <br>1. Fournissez des accesseurs (`getters`) pour lire les attributs. <br>2. Ajoutez un attribut de classe (`static`, Cr3) `nbClientsCrees`, incrémenté dans le constructeur. <br>3. Fournissez un accesseur `static` pour `nbClientsCrees`. Affichez le nombre total de clients créés.",
+            solution: `class Client {
+    // Cr7 : Encapsulation (attributs privés)
+    private int numero;
+    private String nom;
+    
+    // Cr3 : Variable de classe (static)
+    private static int nbClientsCrees = 0;
+    
+    public Client(int numero, String nom) {
+        this.numero = numero;
+        this.nom = nom;
+        nbClientsCrees++; // Incrémentation de la variable de classe
+    }
+    
+    // Accesseur (getter) Cr7
+    public String getNom() {
+        return this.nom;
+    }
+    
+    // Cr3 : Accesseur de la variable de classe (static method)
+    public static int getNbClientsCrees() {
+        return nbClientsCrees;
+    }
+}
+
+public class TestClientEncapsule {
+    public static void main(String[] args) {
+        Client c1 = new Client(1, "Alpha");
+        Client c2 = new Client(2, "Beta");
+        
+        System.out.println("Nom via getter : " + c1.getNom());
+        System.out.println("Nombre total de clients créés : " + Client.getNbClientsCrees());
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 7 : Surcharge de Constructeur et Chaînage (this())",
+            criteria: "(Critère visé : Cr4 - Constructeurs multiples et chaînage)",
+            problem: "Créez une classe **Point2D** (attributs `x`, `y`).<br> 1. Créez un constructeur par défaut `Point2D()` qui initialise `x` et `y` à 0.<br> 2. Créez un second constructeur `Point2D(x, y)`.<br> 3. Modifiez le constructeur par défaut pour qu'il appelle le second constructeur en utilisant la syntaxe de chaînage (`this(0, 0)`).",
+            solution: `class Point2D {
+    private int x;
+    private int y;
+    
+    // Cr4 : Constructeur surchargé principal
+    public Point2D(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+    
+    // Cr4 : Constructeur par défaut chaîné
+    public Point2D() {
+        this(0, 0); // Chaînage de constructeur (this())
+    }
+    
+    public String getCoordonnees() {
+        return "(" + x + ", " + y + ")";
+    }
+}
+
+public class TestPoint {
+    public static void main(String[] args) {
+        Point2D p1 = new Point2D(10, 5);
+        Point2D p2 = new Point2D(); // Utilise le chaînage
+        
+        System.out.println("Point 1 : " + p1.getCoordonnees());
+        System.out.println("Point 2 (Défaut) : " + p2.getCoordonnees());
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 8 : Héritage (Classe Parent/Enfant)",
+            criteria: "(Critères visés : Cr8 - Héritage, Cr4 - super() dans le constructeur)",
+            problem: "Créez une classe parent **Vehicule** avec l'attribut `marque`. <br>Créez une classe enfant **Voiture** qui hérite de `Vehicule` <br> et ajoute un attribut `modele`.<br> Implémentez les constructeurs dans les deux classes en utilisant `super()` pour initialiser la marque dans la classe enfant .",
+            solution: `// Classe de base (Parent)
+class Vehicule {
+    protected String marque;
+    
+    public Vehicule(String marque) {
+        this.marque = marque;
+    }
+    
+    public String getDetails() {
+        return "Marque : " + marque;
+    }
+}
+
+// Cr8 : Classe Enfant héritant de Vehicule
+class Voiture extends Vehicule {
+    private String modele;
+    
+    public Voiture(String marque, String modele) {
+        super(marque); // Cr4 : Appel du constructeur parent
+        this.modele = modele;
+    }
+    
+    // Surcharge de getDetails pour inclure le modèle
+    public String getDetails() {
+        return super.getDetails() + ", Modèle : " + modele;
+    }
+}
+
+public class TestVehicule {
+    public static void main(String[] args) {
+        Voiture v = new Voiture("Renault", "Clio");
+        System.out.println(v.getDetails());
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 9 : Surcharge (Overloading) et Redéfinition (Overriding)",
+            criteria: "(Critères visés : Cr5, Cr8 - Redéfinition de méthode, Surcharge de méthode)",
+            problem: "En utilisant les classes **Vehicule** et **Voiture** (du cas 8) : <br>1. Dans `Vehicule`, créez une méthode `demarrer()` qui affiche un message générique.<br> 2. Dans `Voiture`, **redéfinissez** (`@Override`) cette méthode pour un message spécifique à la voiture.<br> 3. Dans `Voiture`, **surchargez** la méthode `demarrer` en ajoutant une version `demarrer(String type)`.",
+            solution: `// Classe Vehicule (avec méthode de base)
+class Vehicule {
+    protected String marque;
+    public Vehicule(String marque) { this.marque = marque; }
+    public void demarrer() { // Méthode de base
+        System.out.println("Le véhicule de marque " + marque + " démarre.");
+    }
+}
+
+// Classe Voiture
+class Voiture extends Vehicule {
+    public Voiture(String marque) { super(marque); }
+    
+    // Cr8 : Redéfinition (Overriding) : même signature
+    @Override
+    public void demarrer() {
+        System.out.println("La voiture de marque " + marque + " démarre au quart de tour !");
+    }
+    
+    // Cr5 : Surcharge (Overloading) : signature différente
+    public void demarrer(String typeDemarrage) {
+        System.out.println("La voiture " + marque + " démarre avec la clé de type : " + typeDemarrage);
+    }
+}
+
+public class TestMethodes {
+    public static void main(String[] args) {
+        Voiture v = new Voiture("BMW");
+        v.demarrer(); // Appel de la méthode redéfinie (Override)
+        v.demarrer("Électronique"); // Appel de la méthode surchargée (Overload)
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 10 : Constantes de Classe (Static Final) avec Héritage",
+            criteria: "(Critères visés : Cr8, Cr3 - Héritage, Variable de classe 'static final')",
+            problem: "Créez une classe parent **Geometrie**. Ajoutez une **constante de classe** `static final double PI = 3.14159;`.<br> Créez une classe enfant **Cercle** qui hérite.<br> Dans la classe `Cercle`, créez une méthode pour utiliser la constante `PI` directement par le nom de la classe parent (`Geometrie.PI`) pour calculer la circonférence.",
+            solution: `class Geometrie {
+    // Cr3 : Constante de classe (static final)
+    public static final double PI = 3.14159;
+}
+
+// Cr8 : Héritage
+class Cercle extends Geometrie {
+    private double rayon;
+    
+    public Cercle(double rayon) {
+        this.rayon = rayon;
+    }
+    
+    public double calculerCirconference() {
+        // Utilisation de la constante statique du parent (via le nom de la classe)
+        return 2 * Geometrie.PI * rayon;
+    }
+}
+
+public class TestConstanteClasse {
+    public static void main(String[] args) {
+        Cercle c = new Cercle(10.0);
+        System.out.println("Circonférence : " + c.calculerCirconference());
+    }
+}`
+        },
+
+        // --- NIVEAU AVANCÉ (5 CAS) ---
+        {
+            level: "avance",
+            title: "Étude de Cas 11 : Polymorphisme par Upcasting",
+            criteria: "(Critère visé : Cr9 - Polymorphisme par Upcasting)",
+            problem: "En utilisant les classes **Employe** et **Manager** (avec redéfinition de `calculerSalaireAnnuel`) : <br>1. Créez un tableau d'objets de type **Employe** (le type parent).<br> 2. Stockez à la fois un objet `Employe` et un objet `Manager` dans ce tableau (Upcasting). <br>3. Parcourez le tableau et appelez la méthode `calculerSalaireAnnuel()` sur chaque élément, démontrant que la **bonne version** de la méthode est exécutée (Polymorphisme).",
+            solution: `// Définition simplifiée des classes nécessaires
+class Employe {
+    public double calculerSalaireAnnuel() { 
+        return 3000 * 12; 
+    }
+}
+class Manager extends Employe {
+    @Override
+    public double calculerSalaireAnnuel() { 
+        return super.calculerSalaireAnnuel() + 10000; 
+    }
+}
+
+public class TestPolymorphisme {
+    public static void main(String[] args) {
+        // Cr9 : Création d'un tableau de type parent (Employe)
+        Employe[] personnel = new Employe[2];
+        
+        // Upcasting implicite (Manager est stocké comme Employe)
+        personnel[0] = new Employe(); // Salaire : 36000
+        personnel[1] = new Manager(); // Salaire : 36000 + 10000 = 46000
+        
+        System.out.println("Calcul des salaires annuels (Polymorphisme) :");
+        
+        // La JVM appelle la méthode appropriée à l'exécution
+        for (Employe e : personnel) {
+            System.out.println("Salaire Annuel : " + e.calculerSalaireAnnuel());
+        }
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 12 : Polymorphisme (Downcasting et instanceof)",
+            criteria: "(Critère visé : Cr9 - Polymorphisme, Downcasting)",
+            problem: "En partant du tableau de l'étude de cas 11, parcourez les objets. <br>Utilisez l'opérateur **`instanceof`** pour vérifier si l'objet est réellement un `Manager`. <br>Si c'est le cas, effectuez un **Downcasting explicite** vers le type `Manager`<br> et appelez une méthode spécifique à `Manager` (`gererEquipe()`).",
+            solution: `// Classes Employe et Manager (avec méthode spécifique à Manager)
+class Employe {
+    public String getRole() { return "Employe"; }
+}
+class Manager extends Employe {
+    @Override
+    public String getRole() { return "Manager"; }
+    public void gererEquipe() { 
+        System.out.println("-> Gestion de l'équipe en cours..."); 
+    }
+}
+
+public class TestDowncasting {
+    public static void main(String[] args) {
+        Employe e1 = new Employe();
+        Employe e2 = new Manager(); // Upcasting
+        
+        Employe[] personnel = {e1, e2};
+        
+        for (Employe e : personnel) {
+            System.out.println("Rôle actuel : " + e.getRole());
+            
+            // Cr9 : Vérification de l'instance
+            if (e instanceof Manager) {
+                // Cr9 : Downcasting explicite
+                Manager m = (Manager) e; 
+                m.gererEquipe(); // Appel de la méthode spécifique
+            }
+        }
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 13 : Encapsulation Avancée (Validation dans le Mutateur)",
+            criteria: "(Critère visé : Cr7 - Encapsulation avec validation)",
+            problem: "Créez une classe **Produit** (attribut privé `prix`). <br>1. Créez un mutateur (`setPrix`) qui implémente la validation : si le prix passé en paramètre est **négatif ou nul**, la méthode doit afficher un message d'erreur et ignorer la modification (ne pas changer l'attribut).<br> 2. Testez la validation dans le `main`.",
+            solution: `class Produit {
+    private double prix;
+    
+    public Produit(double prixInitial) {
+        this.prix = prixInitial; // Initialisation directe
+    }
+    
+    // Cr7 : Mutateur avec validation
+    public void setPrix(double nouveauPrix) {
+        if (nouveauPrix > 0) {
+            this.prix = nouveauPrix;
+            System.out.println("Prix mis à jour : " + nouveauPrix);
+        } else {
+            // CORRECTION: Changement de System.err à System.out pour éviter un bug d'échappement potentiel
+            System.out.println("ERREUR: Le prix doit être positif. Modification ignorée.");
+        }
+    }
+    
+    public double getPrix() { return prix; }
+}
+
+public class TestValidation {
+    public static void main(String[] args) {
+        Produit p = new Produit(100.0);
+        
+        p.setPrix(150.0); // Réussite
+        System.out.println("Prix actuel : " + p.getPrix());
+        
+        p.setPrix(-5.0); // Échec de la validation
+        System.out.println("Prix actuel après erreur : " + p.getPrix()); // Doit rester 150.0
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 14 : Portée (Scope) et Mot-clé final",
+            criteria: "(Critère visé : Cr3 - Différenciation de portée, Mot-clé final)",
+            problem: "Créez une classe **Calculatrice** avec une méthode `calculerTaxe(int montant, final int taux)`. <br>1. Utilisez `final` sur le paramètre `taux` pour prouver qu'il ne peut pas être modifié.<br> 2. Modifiez la valeur de `montant` dans la méthode pour prouver que ce paramètre est une copie locale. <br>3. Affichez la valeur initiale de `montant` dans le `main` après l'appel à la méthode.",
+            solution: `class Calculatrice {
+    // Cr3 : final sur le paramètre taux
+    public int calculerTaxe(int montant, final int taux) {
+        // taux = 20; // Si décommenté, ceci produirait une erreur de compilation car taux est final
+        
+        // montant peut être modifié car il n'est pas final et est une copie locale (Cr3)
+        montant = montant + 10; 
+        
+        int taxe = montant * taux / 100; // Variable locale
+        System.out.println("  -> Montant utilisé dans la méthode (modifié) : " + montant);
+        return taxe;
+    }
+}
+
+public class TestPortee {
+    public static void main(String[] args) {
+        Calculatrice calc = new Calculatrice();
+        int prixInitial = 100;
+        
+        int taxe = calc.calculerTaxe(prixInitial, 20);
+        
+        System.out.println("Taxe calculée : " + taxe);
+        // prixInitial n'a pas changé (preuve que le paramètre était une copie)
+        System.out.println("Prix Initial après appel : " + prixInitial);
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 15 : Tableau d'Objets et Agrégation de Données",
+            criteria: "(Critères visés : Cr6, Cr5 - Tableau d'objets, Itération et méthode)",
+            problem: "Créez la classe **Article** (`nom`, `prix`). <br>1. Dans le `main`, déclarez et initialisez un **tableau d'objets** de type `Article` de taille 3.<br> 2. Instanciez 3 objets dans ce tableau. <br>3. Créez une méthode statique `calculerTotal()` qui prend le tableau en paramètre, itère sur les objets, et retourne la **somme totale de leurs prix**.",
+            solution: `class Article {
+    private String nom;
+    private double prix;
+    
+    public Article(String nom, double prix) {
+        this.nom = nom;
+        this.prix = prix;
+    }
+    
+    public double getPrix() { return prix; }
+}
+
+public class TestTableauObjets {
+    
+    // Cr5 : Méthode statique pour l'agrégation
+    public static double calculerTotal(Article[] articles) {
+        double total = 0.0;
+        for (Article a : articles) {
+            total += a.getPrix();
+        }
+        return total;
+    }
+    
+    public static void main(String[] args) {
+        // Cr6 : Déclaration et initialisation du tableau d'objets
+        Article[] panier = new Article[3];
+        
+        panier[0] = new Article("Clavier", 50.0);
+        panier[1] = new Article("Souris", 25.0);
+        panier[2] = new Article("Tapis", 10.0);
+        
+        double total = calculerTotal(panier);
+        System.out.println("Total du panier : " + total + " €"); // Résultat attendu: 85.0
+    }
+}`
+        }
+    ];
+
+    const exercisesContainer = document.getElementById('exercises-container');
+    const levelButtons = document.querySelectorAll('.level-btn');
+    let currentLevel = 'debutant';
+
+    /**
+     * Rend les exercices pour un niveau donné.
+     * @param {string} level 
+     */
+    function renderExercises(level) {
+        exercisesContainer.innerHTML = '';
+        const filteredStudies = allStudies.filter(study => study.level === level);
+
+        filteredStudies.forEach((study, index) => {
+            const card = document.createElement('div');
+            card.className = `exercise-card level-${level}`;
+            
+            // Le numéro de cas correspond à son index global (1 à 15) pour une référence simple
+            const caseNumber = allStudies.indexOf(study) + 1;
+
+            // Utilisation des Template Literals pour générer le HTML de la carte
+            card.innerHTML = `
+                <h3>${study.title} (Cas ${caseNumber}/15 - C2)</h3>
+                <p class="criteria">${study.criteria}</p>
+                <p><strong>Problème :</strong> ${study.problem}</p>
+                
+                <button class="solution-toggle">Afficher la solution Java</button>
+                <div class="solution-content hidden">
+                    <pre><code class="language-java">${study.solution.trim()}</code></pre>
+                </div>
+            `;
+
+            const toggleButton = card.querySelector('.solution-toggle');
+            const solutionContent = card.querySelector('.solution-content');
+            
+            // Logique de bascule pour afficher/masquer la solution
+            toggleButton.addEventListener('click', () => {
+                const isHidden = solutionContent.classList.toggle('hidden');
+                
+                // Mettre à jour le texte du bouton en fonction de l'état
+                if (isHidden) {
+                    toggleButton.textContent = 'Afficher la solution Java';
+                } else {
+                    toggleButton.textContent = 'Masquer la solution';
+                }
+            });
+
+            exercisesContainer.appendChild(card);
+        });
+    }
+
+    /**
+     * Change le niveau affiché et met à jour les boutons.
+     * @param {string} level 
+     */
+    function changeLevel(level) {
+        currentLevel = level;
+        
+        // Mise à jour de l'état des boutons
+        levelButtons.forEach(btn => {
+            if (btn.dataset.level === level) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        renderExercises(level);
+    }
+
+    // --- Initialisation ---
+    // Attacher les événements aux boutons
+    levelButtons.forEach(btn => {
+        btn.addEventListener('click', () => changeLevel(btn.dataset.level));
+    });
+
+    // Rendu initial (Débutant par défaut)
+    changeLevel(currentLevel);
+
+</script>
+</body>
+</html>

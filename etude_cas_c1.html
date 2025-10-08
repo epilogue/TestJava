@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C1 - Études de Cas Java (Débutant à Avancé)</title>
+    <style>
+        /* Base Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        h1 {
+            color: #004d99;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Level Toggle Buttons */
+        .level-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .level-btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            transition: all 0.2s;
+        }
+        .level-btn:hover {
+            border-color: #007bff;
+            color: #007bff;
+        }
+        .level-btn.active {
+            background-color: #004d99;
+            color: #fff;
+            border-color: #004d99;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Exercise Card */
+        .exercise-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .exercise-card h3 {
+            font-size: 1.5rem;
+            color: #007bff;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .exercise-card p.criteria {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Solution/Code Block */
+        .solution-toggle {
+            display: block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #e6f0ff;
+            color: #004d99;
+            border: 1px solid #cce0ff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .solution-toggle:hover {
+            background-color: #cce0ff;
+        }
+        
+        .solution-content {
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .solution-content.hidden {
+            display: none;
+        }
+        .solution-content pre {
+            margin: 0;
+            padding: 1rem;
+            background-color: #272822; /* Fond pour le code */
+            color: #f8f8f2;
+            overflow-x: auto;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        /* Color Coding for Levels */
+        .level-debutant { border-left: 5px solid #10b981; }
+        .level-intermediaire { border-left: 5px solid #f97316; }
+        .level-avance { border-left: 5px solid #ef4444; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>C1 : Éléments fondamentaux et algorithmie - Études de Cas</h1>
+    <p style="text-align: center; margin-bottom: 2rem;">Sélectionnez un niveau de difficulté pour afficher les exercices d'écriture de code Java.</p>
+
+    <div class="level-selector">
+        <button class="level-btn active" data-level="debutant">Débutant (5 Cas)</button>
+        <button class="level-btn" data-level="intermediaire">Intermédiaire (5 Cas)</button>
+        <button class="level-btn" data-level="avance">Avancé (5 Cas)</button>
+    </div>
+
+    <div id="exercises-container">
+        </div>
+
+</div>
+
+<script>
+    const allStudies = [
+        // --- NIVEAU DÉBUTANT ---
+        {
+            level: "debutant",
+            title: "Étude de Cas 1 : Variables, Constantes et Transtypage",
+            criteria: "(Critères visés : Cr2, Cr4 - JDK, Conventions, Variables/Constantes, Transtypage)",
+            problem: "Créez un programme Java nommé **Calculateur.java** qui effectue le calcul suivant et affiche le résultat :<br> 1. Déclarez une **constante** entière nommée `MAX_DEVISES` avec la valeur `20`.<br> 2.Déclarez une variable entière nommée `montantInitial` et initialisez-la à `15`. <br>3. Calculez le ratio de `montantInitial` par rapport à `MAX_DEVISES` .<br>Le résultat doit être affiché sous forme d'un nombre à virgule (double).<br>4. Affichez le résultat formaté avec une seule décimale, précédé du texte 'Le ratio est : '.",
+            solution: 'public class Calculateur {\n' +
+                '    /**\n' +
+                '     * Point d\'entrée de l\'application.\n' +
+                '     */\n' +
+                '    public static void main(String[] args) {\n' +
+                '        \n' +
+                '        final int MAX_DEVISES = 20; // Constante\n' +
+                '        int montantInitial = 15;    // Variable\n' +
+                '        \n' +
+                '        // Calcul avec transtypage explicite pour obtenir un double\n' +
+                '        double ratio = (double) montantInitial / MAX_DEVISES; \n' +
+                '        \n' +
+                '        // Affichage formaté (format())\n' +
+                '        System.out.println(\n' +
+                '            String.format("Le ratio est : %.1f", ratio)\n' +
+                '        ); \n' +
+                '    }\n' +
+                '}'
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 2 : Conditions et Opérateurs Logiques",
+            criteria: "(Critères visés : Cr5, Cr7 - Opérateurs logiques/arithmétiques, conditions 'if')",
+            problem: "Écrivez le code d'une méthode `main` qui prend une variable `temperature` (ex: `25`).<br> Utilisez les **opérateurs logiques** (`&&`, `||`) dans une structure conditionnelle (`if/else if/else`) pour afficher :<br> * 'Température dans la plage idéale.' si elle est strictement supérieure à `20` ET inférieure ou égale à `30`.<br> * 'Température extrême.' si elle est inférieure à `0` OU supérieure à `40`. <br>* 'Température acceptable.' dans tous les autres cas.",
+            solution: 'public class VerificateurTemperature {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        int temperature = 25; // Variable d\'exemple\n' +
+                '\n' +
+                '        if (temperature > 20 && temperature <= 30) { \n' +
+                '            System.out.println("Température dans la plage idéale.");\n' +
+                '        } \n' +
+                '        else if (temperature < 0 || temperature > 40) { \n' +
+                '            System.out.println("Température extrême.");\n' +
+                '        } \n' +
+                '        else {\n' +
+                '            System.out.println("Température acceptable.");\n' +
+                '        }\n' +
+                '    }\n' +
+                '}'
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 3 : Manipulation de Chaînes de Caractères",
+            criteria: "(Critère visé : Cr6 - Manipulation des chaînes)",
+            problem: "Vous disposez d'une chaîne de caractères représentant une référence de produit : **'PROD_A420-ENI-2024'**. <br>1. Extrayez la partie du code produit située entre le premier tiret (`-`) et le dernier tiret (la chaîne **'ENI'**). <br>2. Affichez la longueur de la référence complète.<br> 3. Affichez la chaîne extraite en majuscules.",
+            solution: 'public class TraitementChaine {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        String referenceComplete = "PROD_A420-ENI-2024";\n' +
+                '\n' +
+                '        int longueur = referenceComplete.length(); \n' +
+                '\n' +
+                '        // Extraction avec indexOf() et lastIndexOf()\n' +
+                '        int debut = referenceComplete.indexOf("-") + 1;\n' +
+                '        int fin = referenceComplete.lastIndexOf("-");\n' +
+                '        String codeExtraite = referenceComplete.substring(debut, fin); \n' +
+                '        \n' +
+                '        System.out.println("Longueur de la référence : " + longueur);\n' +
+                '        System.out.println("Code extrait (majuscule) : " + codeExtraite.toUpperCase());\n' +
+                '    }\n' +
+                '}'
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 4 : Tableaux et Itération Simple",
+            criteria: "(Critères visés : Cr8, Cr9 - Boucles 'for' et Tableaux 2D)",
+            problem: "Déclarez et initialisez un tableau 2D d'entiers nommé **ventes**<br> avec les valeurs : `{{100, 150, 120, 180}, {200, 180, 210, 250}}`.<br> Utilisez une ou plusieurs boucles `for` pour calculer la **somme totale des ventes** pour tous les trimestres et tous les vendeurs.<br> Affichez le résultat final.",
+            solution: 'public class TotalisateurVentes {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        \n' +
+                '        int[][] ventes = { \n' +
+                '            {100, 150, 120, 180}, \n' +
+                '            {200, 180, 210, 250}  \n' +
+                '        };\n' +
+                '        \n' +
+                '        int totalVentes = 0;\n' +
+                '\n' +
+                '        // Boucle for imbriquée\n' +
+                '        for (int i = 0; i < ventes.length; i++) {\n' +
+                '            for (int j = 0; j < ventes[i].length; j++) {\n' +
+                '                totalVentes += ventes[i][j];\n' +
+                '            }\n' +
+                '        }\n' +
+                '\n' +
+                '        System.out.println("Le total des ventes est : " + totalVentes);\n' +
+                '    }\n' +
+                '}'
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 5 : Contrôle de Flux dans les Boucles",
+            criteria: "(Critère visé : Cr8 - Mots-clés 'break' et 'continue')",
+            problem: "Écrivez une boucle `for` qui itère sur les numéros de commande de `1` à `10`.<br> * Utilisez **`continue`** pour sauter l'affichage des commandes dont le numéro est un multiple de `3`.<br> * Utilisez **`break`** pour arrêter immédiatement le traitement si le numéro de commande dépasse `7`. <br>* Pour toutes les autres commandes, affichez : 'Commande [numéro] traitée.'",
+            solution: 'public class ControleFlux {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        \n' +
+                '        System.out.println("Début du traitement des commandes :");\n' +
+                '        \n' +
+                '        for (int numeroCommande = 1; numeroCommande <= 10; numeroCommande++) {\n' +
+                '            \n' +
+                '            if (numeroCommande > 7) {\n' +
+                '                System.out.println("Limite de traitement atteinte. Arrêt.");\n' +
+                '                break; // Arrête la boucle immédiatement\n' +
+                '            }\n' +
+                '            \n' +
+                '            if (numeroCommande % 3 == 0) {\n' +
+                '                continue; // Passe à l\'itération suivante (saute 3 et 6)\n' +
+                '            }\n' +
+                '            \n' +
+                '            System.out.println("Commande " + numeroCommande + " traitée.");\n' +
+                '        }\n' +
+                '    }\n' +
+                '}'
+        },
+        
+        // --- NIVEAU INTERMÉDIAIRE ---
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 1 : Transtypage et Précision de Calculs",
+            criteria: "(Critères visés : Cr4, Cr5, Cr6 - Variables, Précision, Modulo, Formatage)",
+            problem: "Calculez le prix de revient final d'un produit. <br>Déclarez `prixHT` (`int = 125`), `tauxTVA` (`int = 20`), `coefficientMarge` (`double = 1.35`). <br>1. Calculez le prix TTC (en double) en utilisant le `prixHT` et le `tauxTVA` (20%).<br> 2. Calculez le `prixFinal` en appliquant le `coefficientMarge`. <br>3. Affichez le `prixFinal` **arrondi à deux décimales**.<br> 4. Affichez le **reste de la division entière** du prix TTC par 5 (opérateur modulo).",
+            solution: 'public class CalculPrixRevenuIntermediaire {\n' +
+                '    \n' +
+                '    public static void main(String[] args) {\n' +
+                '        int prixHT = 125;\n' +
+                '        int tauxTVA = 20;\n' +
+                '        double coefficientMarge = 1.35;\n' +
+                '\n' +
+                '        // Transtypage essentiel pour la précision\n' +
+                '        double prixTTC = prixHT * (1 + (double) tauxTVA / 100); \n' +
+                '        double prixFinal = prixTTC * coefficientMarge;\n' +
+                '\n' +
+                '        // Formatage du prix final\n' +
+                '        System.out.println(String.format("Prix Final (Marge incluse) : %.2f", prixFinal));\n' +
+                '        \n' +
+                '        // Reste de la division (Opérateur modulo)\n' +
+                '        int reste = (int) prixTTC % 5; // Transtypage en int nécessaire pour %\n' +
+                '        System.out.println("Reste de la division du TTC par 5 : " + reste);\n' +
+                '    }\n' +
+                '}'
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 2 : Logique Conditionnelle Imbriquée",
+            criteria: "(Critères visés : Cr7, Cr5 - Logique imbriquée, Opérateur ET/OU)",
+            problem: "Vérifiez la validité d'une transaction basée sur l'âge (`age = 17`) et le montant (`montantTransaction = 50.0`).<br> * Si l'utilisateur est **majeur**, la transaction est 'Validée'. <br>* S'il est **mineur** : <br>* Si le montant est **supérieur à 100** OU si l'utilisateur n'est **pas accompagné** (`accompagne = false`), affichez 'Refusée'.<br> * Dans tous les autres cas, affichez 'Validée avec autorisation parentale.'.",
+            solution: 'public class ValidationTransaction {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        int age = 17;\n' +
+                '        double montantTransaction = 50.0;\n' +
+                '        boolean accompagne = true;\n' +
+                '\n' +
+                '        // Structure conditionnelle imbriquée\n' +
+                '        if (age >= 18) {\n' +
+                '            System.out.println("Validée : Utilisateur est majeur.");\n' +
+                '        } else {\n' +
+                '            // Logique complexe pour un mineur\n' +
+                '            if (montantTransaction > 100 || !accompagne) { \n' +
+                '                System.out.println("Refusée : Conditions non remplies pour un mineur.");\n' +
+                '            } else {\n' +
+                '                System.out.println("Validée avec autorisation parentale.");\n' +
+                '            }\n' +
+                '        }\n' +
+                '    }\n' +
+                '}'
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 3 : Découpage Avancé de Chaîne",
+            criteria: "(Critères visés : Cr6, Cr8 - split(), startsWith(), break)",
+            problem: "Vous recevez une liste d'erreurs : **'E404;W200;E500;W100;E403'**.<br> 1. Découpez cette chaîne dans un tableau en utilisant le point-virgule comme séparateur.<br> 2. Itérez sur ce tableau.<br> 3. Si un code commence par **'E500'**, affichez 'Erreur critique détectée, arrêt du traitement.' et **sortez immédiatement de la boucle** en utilisant `break`.<br> 4. Si le code commence par 'W', affichez 'Avertissement (Warning).' et continuez le traitement.",
+            solution: 'public class TraitementErreurs {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        String listeErreurs = "E404;W200;E500;W100;E403";\n' +
+                '        \n' +
+                '        // split() pour obtenir un tableau\n' +
+                '        String[] codes = listeErreurs.split(";"); \n' +
+                '        \n' +
+                '        System.out.println("Analyse des codes d\'erreurs :");\n' +
+                '\n' +
+                '        for (String code : codes) {\n' +
+                '            System.out.println("-> Code : " + code);\n' +
+                '            \n' +
+                '            // startsWith() pour la vérification\n' +
+                '            if (code.startsWith("E500")) { \n' +
+                '                System.out.println("Erreur critique détectée, arrêt du traitement.");\n' +
+                '                break; // Sortie immédiate\n' +
+                '            } \n' +
+                '            else if (code.startsWith("W")) {\n' +
+                '                System.out.println("Avertissement (Warning).");\n' +
+                '                continue; // Passe au code suivant\n' +
+                '            }\n' +
+                '        }\n' +
+                '        System.out.println("Fin de l\'analyse.");\n' +
+                '    }\n' +
+                '}'
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 4 : Calculs Algorithmiques avec Boucles Conditionnelles",
+            criteria: "(Critère visé : Cr8 - Boucle 'while')",
+            problem: "Calculez le nombre d'années nécessaires pour qu'un capital initial (`1000.0`) atteigne un montant cible (`1500.0`) avec un taux d'intérêt fixe (`0.05` soit 5%).<br> 1. Utilisez une boucle **`while`** pour simuler l'accumulation des intérêts.<br> 2. La boucle doit s'arrêter lorsque le capital est **supérieur ou égal** au montant cible. <br>3. Comptez et affichez le nombre total d'années nécessaires.",
+            solution: 'public class CalculInterets {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        double capitalInitial = 1000.0;\n' +
+                '        double tauxInteret = 0.05; \n' +
+                '        double capitalCible = 1500.0;\n' +
+                '        int annees = 0;\n' +
+                '\n' +
+                '        // Boucle while pour la condition complexe\n' +
+                '        while (capitalInitial < capitalCible) {\n' +
+                '            capitalInitial = capitalInitial * (1 + tauxInteret);\n' +
+                '            annees++;\n' +
+                '        }\n' +
+                '\n' +
+                '        System.out.println("Objectif atteint !");\n' +
+                '        System.out.println("Nombre total d\'années nécessaires : " + annees);\n' +
+                '    }\n' +
+                '}'
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 5 : Tri et Parcours de Tableau (Simple)",
+            criteria: "(Critères visés : Cr9, Cr8 - Tri et boucles imbriquées)",
+            problem: "Déclarez un tableau d'entiers `nombres` : `{4, 1, 8, 5, 10, 2}`.<br> 1. Implémentez le **tri à bulles** (ou tout autre algorithme de tri basique avec boucles imbriquées) pour classer le tableau par ordre croissant.<br> 2. Affichez le tableau trié.<br> 3. Déduisez et affichez les valeurs minimale et maximale.",
+            solution: 'public class TriEtMinMax {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        int[] nombres = {4, 1, 8, 5, 10, 2};\n' +
+                '        int n = nombres.length;\n' +
+                '\n' +
+                '        // Tri à Bulles (Boucles imbriquées)\n' +
+                '        for (int i = 0; i < n - 1; i++) {\n' +
+                '            for (int j = 0; j < n - i - 1; j++) {\n' +
+                '                if (nombres[j] > nombres[j + 1]) {\n' +
+                '                    // Permutation (swap)\n' +
+                '                    int temp = nombres[j];\n' +
+                '                    nombres[j] = nombres[j + 1];\n' +
+                '                    nombres[j + 1] = temp;\n' +
+                '                }\n' +
+                '            }\n' +
+                '        }\n' +
+                '        \n' +
+                '        // Affichage du tableau trié\n' +
+                '        System.out.print("Tableau trié : {");\n' +
+                '        for (int i = 0; i < n; i++) {\n' +
+                '            System.out.print(nombres[i] + (i < n - 1 ? ", " : ""));\n' +
+                '        }\n' +
+                '        System.out.println("}");\n' +
+                '        \n' +
+                '        System.out.println("Valeur Minimale : " + nombres[0]);\n' +
+                '        System.out.println("Valeur Maximale : " + nombres[n - 1]);\n' +
+                '    }\n' +
+                '}'
+        },
+
+        // --- NIVEAU AVANCÉ ---
+        {
+            level: "avance",
+            title: "Étude de Cas 1 : Gestion des Références et Opérateur Ternaire",
+            criteria: "(Critères visés : Cr4, Cr7 - Références/Primitives, Opérateur Ternaire)",
+            problem: "Démontrez la différence entre la copie de primitives et la copie de références.<br> 1. Déclarez `a = 10` et `b = a` (primitives). Modifiez `b` à `20`. Affichez `a` et `b`. <br>2. Déclarez `tab1 = {1, 2, 3}` et `tab2 = tab1` (références). Modifiez `tab2[0]` à `99`. Affichez `tab1[0]`. <br>3. Utilisez l'**opérateur ternaire** (`? :`) pour déterminer et afficher si `a` est supérieur à `b` (en utilisant les valeurs finales).",
+            solution: 'public class ReferencesEtTernaire {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        // Primitives (Copie par valeur)\n' +
+                '        int a = 10;\n' +
+                '        int b = a;\n' +
+                '        b = 20;\n' +
+                '        System.out.println("Primitives (a) : " + a + " (b) : " + b); \n' +
+                '\n' +
+                '        // Objets/Tableaux (Copie par référence)\n' +
+                '        int[] tab1 = {1, 2, 3};\n' +
+                '        int[] tab2 = tab1; // tab2 référence tab1\n' +
+                '        \n' +
+                '        tab2[0] = 99; // Modifie l\'objet référencé par tab1\n' +
+                '        System.out.println("Références (tab1[0]) : " + tab1[0]);\n' +
+                '\n' +
+                '        // Opérateur ternaire (Cr7)\n' +
+                '        String resultatTernaire = (a > b) ? "A est supérieur à B" : "A est inférieur ou égal à B";\n' +
+                '        System.out.println("Verdict Ternaire : " + resultatTernaire);\n' +
+                '    }\n' +
+                '}'
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 2 : Opérateurs Bit-à-Bit",
+            criteria: "(Critères visés : Cr5, Cr7 - Opérateurs bit-à-bit (&, |), conditions)",
+            problem: "Simulez la gestion des permissions d'un utilisateur en utilisant les opérateurs binaires. <br>1. Définissez les constantes de permissions : `READ = 1`, `WRITE = 2`, `DELETE = 4`, `ADMIN = 8`.<br> 2. Déclarez `userPermissions` avec l'accès en lecture et en écriture (par exemple, `READ | WRITE`). <br>3. Écrivez une condition qui utilise l'opérateur **ET bit-à-bit** (`&`) pour déterminer si l'utilisateur possède la permission `ADMIN`. Affichez le résultat.",
+            solution: 'public class GestionPermissionsBinaire {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        final int READ = 0x1;    // 1\n' +
+                '        final int WRITE = 0x2;   // 2\n' +
+                '        final int DELETE = 0x4;  // 4\n' +
+                '        final int ADMIN = 0x8;   // 8\n' +
+                '\n' +
+                '        // Combinaison de permissions\n' +
+                '        int userPermissions = READ | WRITE; \n' +
+                '        \n' +
+                '        System.out.println("Permissions combinées (Décimal) : " + userPermissions);\n' +
+                '\n' +
+                '        // Vérification de la permission ADMIN\n' +
+                '        if ((userPermissions & ADMIN) != 0) { \n' +
+                '            System.out.println("L\'utilisateur est un ADMIN.");\n' +
+                '        } else {\n' +
+                '            System.out.println("L\'utilisateur n\'est PAS un ADMIN.");\n' +
+                '        }\n' +
+                '    }\n' +
+                '}'
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 3 : Formatage de Chaînes et Padding",
+            criteria: "(Critère visé : Cr6 - String.format() et alignement)",
+            problem: "Générez un rapport financier aligné. <br>1. Déclarez des données de produits (Nom et Prix). <br>2. Utilisez **`String.format()`** pour afficher ces données.<br> 3. Le nom du produit doit être aligné à **gauche** et occuper un espace fixe de **15 caractères** (padding). <br>4. Le prix doit être aligné à **droite**, occuper **10 caractères** et être affiché avec **deux décimales**.",
+            solution: 'public class FormatageAvance {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        String nom1 = "Café Expresso";\n' +
+                '        double prix1 = 2.50;\n' +
+                '        String nom2 = "Jus d\'Orange Frais";\n' +
+                '        double prix2 = 4.90;\n' +
+                '\n' +
+                '        System.out.println(String.format("%-15s %10s", "PRODUIT", "PRIX (€)"));\n' +
+                '        System.out.println("--------------------------");\n' +
+                '\n' +
+                '        // Formatage avancé: %-15s (gauche, 15 chars) et %10.2f (droite, 10 chars, 2 décimales)\n' +
+                '        String ligne1 = String.format("%-15s %10.2f", nom1, prix1);\n' +
+                '        String ligne2 = String.format("%-15s %10.2f", nom2, prix2);\n' +
+                '\n' +
+                '        System.out.println(ligne1);\n' +
+                '        System.out.println(ligne2);\n' +
+                '    }\n' +
+                '}'
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 4 : Tableaux Irréguliers (Jagged Arrays) et Recherche",
+            criteria: "(Critères visés : Cr9, Cr8, Cr4 - Tableaux irréguliers, Transtypage, Boucle)",
+            problem: "Déclarez un tableau 2D **irrégulier** de notes : `{{15, 12, 18}, {10, 14}, {19, 20, 18, 17}}`. <br>1. Calculez la **note moyenne** pour **chaque groupe** séparément.<br> 2. Affichez la moyenne pour chaque groupe (deux décimales). <br>3. Déterminez et affichez si une note de `20` a été attribuée dans l'un des groupes. Si oui, mettez fin à la recherche après l'affichage du message.",
+            solution: 'public class TableauIrregulierEtRecherche {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        \n' +
+                '        int[][] notesGroupes = { \n' +
+                '            {15, 12, 18},    \n' +
+                '            {10, 14},        \n' +
+                '            {19, 20, 18, 17} \n' +
+                '        };\n' +
+                '        \n' +
+                '        boolean maxAtteint = false;\n' +
+                '\n' +
+                '        for (int i = 0; i < notesGroupes.length; i++) {\n' +
+                '            int somme = 0;\n' +
+                '            \n' +
+                '            for (int note : notesGroupes[i]) {\n' +
+                '                somme += note;\n' +
+                '                \n' +
+                '                if (note == 20) {\n' +
+                '                    maxAtteint = true;\n' +
+                '                }\n' +
+                '            }\n' +
+                '            \n' +
+                '            double moyenne = (double) somme / notesGroupes[i].length; \n' +
+                '            System.out.println(String.format("Moyenne du Groupe %d : %.2f", i + 1, moyenne));\n' +
+                '        }\n' +
+                '\n' +
+                '        if (maxAtteint) {\n' +
+                '            System.out.println("\\nUn étudiant a atteint la note maximale (20).");\n' +
+                '        }\n' +
+                '    }\n' +
+                '}'
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 5 : Optimisation Algorithmique Simple",
+            criteria: "(Critère visé : Cr8 - Optimisation de boucle et 'break')",
+            problem: "Déterminez si un nombre entier donné (`29` par exemple) est un nombre premier. <br>1. Écrivez une boucle **optimisée** pour vérifier la primalité : elle doit s'arrêter à la **racine carrée** du nombre (`Math.sqrt()`), car tout facteur plus grand aurait déjà un facteur plus petit découvert.<br> 2. Utilisez **`break`** pour arrêter le processus dès qu'un diviseur est trouvé.<br> 3. Affichez si le nombre est premier ou non.",
+            solution: 'public class VerificateurNombrePremierOptimise {\n' +
+                '\n' +
+                '    public static void main(String[] args) {\n' +
+                '        int nombre = 29; \n' +
+                '        boolean estPremier = true;\n' +
+                '\n' +
+                '        if (nombre <= 1) {\n' +
+                '            estPremier = false;\n' +
+                '        } \n' +
+                '        \n' +
+                '        // Optimisation : arrêt à la racine carrée\n' +
+                '        int limite = (int) Math.sqrt(nombre);\n' +
+                '\n' +
+                '        for (int i = 2; i <= limite; i++) {\n' +
+                '            if (nombre % i == 0) { \n' +
+                '                estPremier = false;\n' +
+                '                break; // Arrêt immédiat\n' +
+                '            }\n' +
+                '        }\n' +
+                '\n' +
+                '        if (estPremier) {\n' +
+                '            System.out.println(nombre + " est un nombre premier.");\n' +
+                '        } else {\n' +
+                '            System.out.println(nombre + " n\'est pas un nombre premier.");\n' +
+                '        }\n' +
+                '    }\n' +
+                '}'
+        }
+    ];
+
+    const exercisesContainer = document.getElementById('exercises-container');
+    const levelButtons = document.querySelectorAll('.level-btn');
+    let currentLevel = 'debutant';
+
+    /**
+     * Rend les exercices pour un niveau donné.
+     * @param {string} level 
+     */
+    function renderExercises(level) {
+        exercisesContainer.innerHTML = '';
+        const filteredStudies = allStudies.filter(study => study.level === level);
+
+        filteredStudies.forEach((study, index) => {
+            const card = document.createElement('div');
+            card.className = `exercise-card level-${level}`;
+            
+            const caseNumber = index + 1;
+
+            card.innerHTML = `
+                <h3>${study.title} (Cas ${caseNumber}/5)</h3>
+                <p class="criteria">${study.criteria}</p>
+                <p><strong>Problème :</strong> ${study.problem}</p>
+                
+                <button class="solution-toggle">Afficher la solution Java</button>
+                <div class="solution-content hidden">
+                    <pre><code class="language-java">${study.solution.trim()}</code></pre>
+                </div>
+            `;
+
+            const toggleButton = card.querySelector('.solution-toggle');
+            const solutionContent = card.querySelector('.solution-content');
+            
+            // Logique de bascule pour afficher/masquer la solution
+            toggleButton.addEventListener('click', () => {
+                const isHidden = solutionContent.classList.toggle('hidden');
+                
+                // Mettre à jour le texte du bouton en fonction de l'état
+                if (isHidden) {
+                    toggleButton.textContent = 'Afficher la solution Java';
+                } else {
+                    toggleButton.textContent = 'Masquer la solution';
+                }
+            });
+
+            exercisesContainer.appendChild(card);
+        });
+    }
+
+    /**
+     * Change le niveau affiché et met à jour les boutons.
+     * @param {string} level 
+     */
+    function changeLevel(level) {
+        currentLevel = level;
+        
+        // Mise à jour de l'état des boutons
+        levelButtons.forEach(btn => {
+            if (btn.dataset.level === level) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        renderExercises(level);
+    }
+
+    // --- Initialisation ---
+    // Attacher les événements aux boutons
+    levelButtons.forEach(btn => {
+        btn.addEventListener('click', () => changeLevel(btn.dataset.level));
+    });
+
+    // Rendu initial (Débutant par défaut)
+    // On s'assure que le rendu est la première action après la définition des fonctions.
+    changeLevel(currentLevel);
+
+</script>
+</body>
+</html>

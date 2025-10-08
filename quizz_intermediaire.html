@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Certification Java - Niveau Intermédiaire (C1 à C5)</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom Styles for better visual consistency */
+        body {
+            background-color: #e5e7eb; /* Gray-100 */
+        }
+        .container-quiz {
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+        .competence-selector {
+            background-color: #1f2937; /* Gray-800 */
+        }
+        .competence-btn.active {
+            border-bottom: 3px solid #f97316; /* Orange-500 */
+            color: #f97316;
+        }
+        .option-button {
+            transition: all 0.2s;
+        }
+        .option-button:hover:not(.disabled) {
+            background-color: #f3f4f6; /* Gray-100 */
+        }
+        .option-button.correct {
+            background-color: #d1fae5; /* Green-100 */
+            border-color: #10b981; /* Green-500 */
+            pointer-events: none;
+        }
+        .option-button.incorrect {
+            background-color: #fee2e2; /* Red-100 */
+            border-color: #ef4444; /* Red-500 */
+            pointer-events: none;
+        }
+        .explanation {
+            border-left: 4px solid #f97316; /* Orange-500 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-quiz p-4">
+    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-4">
+        Quiz Intermédiaire - Certification Java (C1 à C5) 🎓
+    </h1>
+    
+    <div class="competence-selector p-3 rounded-t-lg shadow-lg flex flex-wrap justify-center space-x-2 sm:space-x-4">
+        <button data-comp="0" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition active">C1</button>
+        <button data-comp="1" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C2</button>
+        <button data-comp="2" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C3</button>
+        <button data-comp="3" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C4</button>
+        <button data-comp="4" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C5</button>
+    </div>
+
+    <div id="quiz-card" class="bg-white rounded-b-lg shadow-lg p-6 sm:p-8">
+        </div>
+
+    <div class="bg-white rounded-lg shadow p-4 text-sm text-gray-600 mt-6">
+        <p class="font-semibold mb-2">📋 Informations sur le quiz :</p>
+        <ul class="space-y-1">
+            <li>• Niveau de difficulté : **Intermédiaire**</li>
+            <li>• Chaque quiz contient **5 questions** (QCM/QCU) spécifiques à la compétence.</li>
+            <li>• Score cumulé total : <span id="final-score" class="font-bold text-orange-600"></span></li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        // --- C1 : Éléments fondamentaux et algorithmie (Intermédiaire) ---
+        {
+          competence: "C1 - Éléments fondamentaux et algorithmie",
+          level: "Intermédiaire",
+          questions: [
+            {
+              question: "Quel est le résultat de l'opération `int x = 5; int y = x++ * 2;` ?",
+              options: [
+                "`x` vaut 6, `y` vaut 10",
+                "`x` vaut 6, `y` vaut 12",
+                "`x` vaut 5, `y` vaut 10",
+                "Le code ne compile pas"
+              ],
+              correct: 0,
+              explanation: "L'opérateur post-incrémentation `x++` utilise d'abord la valeur de `x` (5) pour le calcul, puis incrémente `x`."
+            },
+            {
+              question: "Quelle est la principale différence entre `String` et `StringBuilder` ?",
+              options: [
+                "`String` est plus rapide pour la concaténation.",
+                "`StringBuilder` est immuable (immutable).",
+                "`String` crée un nouvel objet à chaque modification, `StringBuilder` modifie l'objet existant.",
+                "Il n'y a pas de différence fonctionnelle."
+              ],
+              correct: 2,
+              explanation: "`String` est immuable, ce qui signifie que chaque concaténation crée une nouvelle instance en mémoire. `StringBuilder` est mutable, ce qui le rend plus efficace pour des modifications multiples."
+            },
+            {
+              question: "Que fait l'instruction `break maBoucle;` dans des boucles imbriquées ?",
+              options: [
+                "Elle termine uniquement la boucle la plus interne.",
+                "Elle termine la boucle externe identifiée par le label `maBoucle`.",
+                "Elle saute l'itération en cours de la boucle externe.",
+                "Ceci est une syntaxe invalide en Java."
+              ],
+              correct: 1,
+              explanation: "Un `break` avec un label permet de sortir d'une structure de boucle ou de bloc spécifique, autre que la plus interne."
+            },
+            {
+              question: "Comment déclare-t-on un tableau 2D irrégulier (jagged array) où la première ligne a 3 colonnes et la seconde en a 2 ?",
+              options: [
+                "`int[][] tab = new int[2][3,2];`",
+                "`int[][] tab = new int[2][]; tab[0] = new int[3]; tab[1] = new int[2];`",
+                "`int[2][*] tab = { {1,2,3}, {4,5} };`",
+                "Ce n'est pas possible en Java."
+              ],
+              correct: 1,
+              explanation: "Pour un tableau irrégulier, on ne spécifie que la taille de la première dimension, puis on alloue chaque sous-tableau individuellement."
+            },
+            {
+              question: "L'opérateur `^` en Java est utilisé pour :",
+              options: [
+                "L'exponentiation (puissance).",
+                "Le OU exclusif (XOR) bit-à-bit.",
+                "La concaténation de chaînes.",
+                "Le ET logique (AND)."
+              ],
+              correct: 1,
+              explanation: "L'opérateur `^` effectue une opération binaire XOR, qui retourne 1 si les bits comparés sont différents, et 0 sinon."
+            }
+          ]
+        },
+        
+        // --- C2 : Programmation Orientée Objet (Intermédiaire) ---
+        {
+          competence: "C2 - Programmation Orientée Objet",
+          level: "Intermédiaire",
+          questions: [
+            {
+              question: "Quelle est la différence fondamentale entre la surcharge (overloading) et la redéfinition (overriding) de méthode ?",
+              options: [
+                "La surcharge se fait dans la classe enfant, la redéfinition dans la même classe.",
+                "La surcharge change la signature de la méthode, la redéfinition la conserve.",
+                "La redéfinition utilise le mot-clé `static`, la surcharge non.",
+                "Il n'y a pas de différence majeure."
+              ],
+              correct: 1,
+              explanation: "La surcharge (overloading) a le même nom de méthode mais des paramètres différents. La redéfinition (overriding) a la même signature (nom et paramètres) et se produit dans une classe enfant."
+            },
+            {
+              question: "Que signifie le mot-clé `final` lorsqu'il est appliqué à une classe ?",
+              options: [
+                "La classe ne peut pas être instanciée.",
+                "Toutes les méthodes de la classe deviennent finales.",
+                "La classe ne peut pas avoir de classe enfant (on ne peut pas en hériter).",
+                "La classe ne peut contenir que des constantes."
+              ],
+              correct: 2,
+              explanation: "Le modificateur `final` sur une classe empêche l'héritage, ce qui garantit que son implémentation ne sera pas modifiée par une sous-classe."
+            },
+            {
+              question: "Dans le constructeur d'une classe enfant, quel est le rôle de `super()` ?",
+              options: [
+                "Appeler une méthode statique de la classe parent.",
+                "Appeler le constructeur de la classe parent.",
+                "Créer une instance de la classe parent.",
+                "Référencer un attribut de la classe parent."
+              ],
+              correct: 1,
+              explanation: "L'appel `super()` dans un constructeur de classe enfant invoque le constructeur correspondant de la classe mère pour initialiser la partie héritée de l'objet."
+            },
+            {
+              question: "Une méthode `static` peut-elle accéder directement à un attribut d'instance (non-statique) ?",
+              options: [
+                "Oui, sans aucune restriction.",
+                "Oui, mais seulement si l'attribut est `public`.",
+                "Non, car une méthode statique n'est pas liée à une instance spécifique.",
+                "Seulement si la méthode est aussi `final`."
+              ],
+              correct: 2,
+              explanation: "Les méthodes statiques appartiennent à la classe, pas à une instance. Elles n'ont pas de 'this' et ne peuvent donc pas accéder aux attributs qui dépendent d'une instance."
+            },
+            {
+              question: "Lequel de ces scénarios est un exemple de 'composition' plutôt que d''héritage' ?",
+              options: [
+                "Une `Voiture` est un `Vehicule`.",
+                "Un `Manager` est un `Employe`.",
+                "Une `Voiture` a un `Moteur`.",
+                "Un `Cercle` est une `Forme`."
+              ],
+              correct: 2,
+              explanation: "La composition (relation 'a-un') consiste à inclure un objet d'une autre classe comme attribut. L'héritage (relation 'est-un') crée une hiérarchie de types."
+            }
+          ]
+        },
+        
+        // --- C3 : Structures de Contrôle, Tableaux et Collections (Intermédiaire) ---
+        {
+          competence: "C3 - Structures de Contrôle, Tableaux et Collections",
+          level: "Intermédiaire",
+          questions: [
+            {
+              question: "Quelle est la principale différence de performance entre un `ArrayList` et un `LinkedList` ?",
+              options: [
+                "`ArrayList` est plus rapide pour les insertions/suppressions au milieu de la liste.",
+                "`LinkedList` est plus rapide pour l'accès par index (`get(i)`).",
+                "`ArrayList` est plus rapide pour l'accès par index, `LinkedList` pour les insertions/suppressions.",
+                "Il n'y a pas de différence de performance significative."
+              ],
+              correct: 2,
+              explanation: "`ArrayList` utilise un tableau interne, ce qui rend l'accès par index très rapide (O(1)), mais les insertions/suppressions coûteuses (O(n)). `LinkedList` utilise des nœuds liés, ce qui inverse ces caractéristiques."
+            },
+            {
+              question: "Que se passe-t-il si vous essayez d'ajouter un élément déjà existant à un `HashSet` ?",
+              options: [
+                "Une exception est levée.",
+                "L'élément est ajouté une deuxième fois.",
+                "L'opération est ignorée et la collection reste inchangée.",
+                "L'ancien élément est remplacé par le nouveau."
+              ],
+              correct: 2,
+              explanation: "Un `Set` ne peut pas contenir de doublons. La méthode `add()` retourne `false` et l'ensemble n'est pas modifié si l'élément est déjà présent (basé sur `equals()` et `hashCode()`)."
+            },
+            {
+              question: "Dans une `HashMap<K, V>`, que doit garantir la classe utilisée pour la clé `K` ?",
+              options: [
+                "Elle doit implémenter l'interface `Comparable`.",
+                "Elle doit avoir une méthode `toString()` valide.",
+                "Elle doit correctement redéfinir `equals()` et `hashCode()`.",
+                "Elle doit être `final`."
+              ],
+              correct: 2,
+              explanation: "Pour que la `HashMap` fonctionne correctement (trouver des clés, éviter les doublons), elle doit pouvoir comparer les clés de manière fiable, ce qui nécessite des implémentations cohérentes de `equals()` et `hashCode()`."
+            },
+            {
+              question: "Quelle est une limitation de la boucle `for-each` (`for (Type element : collection)`) ?",
+              options: [
+                "Elle ne peut pas être utilisée avec des tableaux.",
+                "Elle ne permet pas de supprimer des éléments de la collection pendant l'itération.",
+                "Elle est plus lente qu'une boucle `for` classique.",
+                "Elle ne peut pas accéder à l'index de l'élément courant."
+              ],
+              correct: 3,
+              explanation: "La boucle `for-each` abstrait l'index et ne fournit qu'un accès direct à l'élément. Pour obtenir l'index, une boucle `for` traditionnelle est nécessaire."
+            },
+            {
+              question: "À partir de Java 14, comment peut-on simplifier une instruction `switch` pour retourner une valeur ?",
+              options: [
+                "En utilisant le mot-clé `return` dans chaque `case`.",
+                "En utilisant la syntaxe 'arrow' (`->`) et `yield` (ou une expression).",
+                "Ce n'est pas possible, un `switch` ne retourne pas de valeur.",
+                "En utilisant un `if` à l'intérieur du `switch`."
+              ],
+              correct: 1,
+              explanation: "Les 'switch expressions' introduites dans les versions récentes de Java permettent une syntaxe plus concise pour retourner des valeurs, en évitant les `break` et les variables temporaires."
+            }
+          ]
+        },
+        
+        // --- C4 : Gestion des Exceptions et Entrées/Sorties (Intermédiaire) ---
+        {
+          competence: "C4 - Gestion des Exceptions et Entrées/Sorties (I/O)",
+          level: "Intermédiaire",
+          questions: [
+            {
+              question: "Quel est l'avantage principal de la syntaxe `try-with-resources` ?",
+              options: [
+                "Elle permet de capturer plusieurs types d'exceptions.",
+                "Elle garantit la fermeture automatique des ressources `AutoCloseable`.",
+                "Elle est plus rapide à l'exécution qu'un `try-catch-finally`.",
+                "Elle permet de relancer une exception sans la déclarer."
+              ],
+              correct: 1,
+              explanation: "`try-with-resources` simplifie la gestion des ressources en assurant que leur méthode `close()` est appelée, évitant ainsi les fuites de ressources."
+            },
+            {
+              question: "Quelle est la différence entre `throw` et `throws` en Java ?",
+              options: [
+                "`throw` est utilisé pour les exceptions non vérifiées, `throws` pour les vérifiées.",
+                "`throw` est utilisé pour lancer une exception, `throws` pour déclarer qu'une méthode peut en lancer une.",
+                "`throws` est placé à l'intérieur d'une méthode, `throw` dans sa signature.",
+                "Il n'y a pas de différence, ils sont interchangeables."
+              ],
+              correct: 1,
+              explanation: "`throw` est l'instruction qui lance une instance d'exception. `throws` fait partie de la signature d'une méthode et avertit les appelants qu'ils doivent gérer cette exception."
+            },
+            {
+              question: "Pour créer une exception personnalisée qui doit obligatoirement être gérée (Checked Exception), de quelle classe doit-elle hériter ?",
+              options: [
+                "`RuntimeException`",
+                "`Error`",
+                "`Exception` (ou une de ses sous-classes sauf `RuntimeException`)",
+                "`Throwable`"
+              ],
+              correct: 2,
+              explanation: "Hériter de `Exception` (ou `IOException`, etc.) crée une exception vérifiée, forçant l'appelant à l'attraper avec `try-catch` ou à la propager avec `throws`."
+            },
+            {
+              question: "Quelle classe est la plus efficace pour lire un gros fichier texte ligne par ligne ?",
+              options: [
+                "`FileInputStream`",
+                "`FileReader`",
+                "`BufferedReader` enveloppant un `FileReader`",
+                "`Scanner`"
+              ],
+              correct: 2,
+              explanation: "`BufferedReader` utilise un tampon (buffer) pour lire de gros blocs de données à la fois, ce qui minimise les accès au disque et améliore considérablement les performances."
+            },
+            {
+              question: "Que permet la syntaxe `catch (IOException | SQLException e)` ?",
+              options: [
+                "De capturer `IOException` puis, si elle échoue, de capturer `SQLException`.",
+                "De capturer n'importe quelle exception qui hérite à la fois de `IOException` et `SQLException`.",
+                "De capturer soit `IOException`, soit `SQLException` dans un seul bloc de code.",
+                "C'est une syntaxe invalide."
+              ],
+              correct: 2,
+              explanation: "Le 'multi-catch', introduit en Java 7, permet de gérer plusieurs types d'exceptions avec un seul bloc `catch`, réduisant ainsi la duplication de code."
+            }
+          ]
+        },
+        
+        // --- C5 : Connexion à une base de données avec JDBC (Intermédiaire) ---
+        {
+          competence: "C5 - Connexion à une base de données avec JDBC",
+          level: "Intermédiaire",
+          questions: [
+            {
+              question: "Pourquoi `PreparedStatement` est-il généralement préféré à `Statement` ?",
+              options: [
+                "Il est plus simple à écrire.",
+                "Il protège contre les injections SQL et peut être plus performant.",
+                "Il permet d'exécuter plusieurs types de requêtes à la fois.",
+                "Il ne lève jamais de `SQLException`."
+              ],
+              correct: 1,
+              explanation: "`PreparedStatement` pré-compile la requête et traite les paramètres comme des données, ce qui empêche les injections SQL. Il peut aussi être mis en cache par le SGBD, améliorant les performances."
+            },
+            {
+              question: "Que signifie `conn.setAutoCommit(false);` ?",
+              options: [
+                "La connexion ne sera jamais validée.",
+                "Chaque requête sera validée manuellement avec `conn.commit()` ou annulée avec `conn.rollback()`.",
+                "La connexion est en mode lecture seule.",
+                "La base de données gérera les transactions automatiquement."
+              ],
+              correct: 1,
+              explanation: "Désactiver l'auto-commit est la première étape pour gérer une transaction manuellement, permettant de grouper plusieurs opérations en une seule unité atomique."
+            },
+            {
+              question: "Pour pouvoir se déplacer librement (en avant et en arrière) dans un `ResultSet`, comment doit être créé le `Statement` ?",
+              options: [
+                "`conn.createStatement()`",
+                "`conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)`",
+                "`conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)`",
+                "Tous les `ResultSet` sont déplaçables par défaut."
+              ],
+              correct: 2,
+              explanation: "Pour créer un `ResultSet` 'scrollable', il faut spécifier un type comme `TYPE_SCROLL_INSENSITIVE` ou `TYPE_SCROLL_SENSITIVE` lors de la création du `Statement`."
+            },
+            {
+              question: "Quel est le but de la méthode `executeBatch()` sur un `PreparedStatement` ?",
+              options: [
+                "Exécuter une seule requête qui affecte plusieurs tables.",
+                "Envoyer un groupe de requêtes (ajoutées avec `addBatch()`) à la base de données en un seul appel.",
+                "Valider une transaction (commit).",
+                "Exécuter des requêtes en parallèle."
+              ],
+              correct: 1,
+              explanation: "Le traitement par lots (batch processing) est une optimisation qui réduit le nombre d'allers-retours réseau en envoyant plusieurs commandes SQL en une seule fois."
+            },
+            {
+              question: "En plus de `getMessage()`, quelle autre méthode de `SQLException` est utile pour obtenir un code d'erreur standardisé ?",
+              options: [
+                "`getErrorCode()`",
+                "`getSQLState()`",
+                "`getErrorType()`",
+                "`getStandardCode()`"
+              ],
+              correct: 1,
+              explanation: "`getSQLState()` retourne un code d'erreur standardisé (SQLSTATE) sur 5 caractères, indépendant du fournisseur de la base de données, contrairement à `getErrorCode()` qui est spécifique."
+            }
+          ]
+        }
+    ];
+
+    let currentCompetenceIndex = 0;
+    let currentQuestionIndex = 0;
+    let selectedAnswer = null;
+    let showResult = false;
+    // Stockage du score et des réponses par compétence: [score, reponse_index_selectionné_par_question]
+    let quizState = quizData.map(comp => ({
+        score: 0,
+        answered: Array(comp.questions.length).fill(null), // null: non répondu, -1: réponse incorrecte, index: réponse correcte
+        isCompleted: false
+    }));
+
+    const quizCard = document.getElementById('quiz-card');
+    const competenceButtons = document.querySelectorAll('.competence-btn');
+    const finalScoreDisplay = document.getElementById('final-score');
+
+    const TOTAL_QUESTIONS = quizData.reduce((sum, comp) => sum + comp.questions.length, 0);
+
+    // --- Core Logic ---
+
+    function updateFinalScoreDisplay() {
+        const totalScore = quizState.reduce((sum, state) => sum + state.score, 0);
+        finalScoreDisplay.textContent = `${totalScore}/${TOTAL_QUESTIONS} (${Math.round((totalScore / TOTAL_QUESTIONS) * 100)}%)`;
+    }
+
+    function checkAnswer(selectedIndex) {
+        if (showResult) return; // Empêche de répondre deux fois
+
+        const currentCompState = quizState[currentCompetenceIndex];
+        const currentQuestion = quizData[currentCompetenceIndex].questions[currentQuestionIndex];
+        
+        selectedAnswer = selectedIndex;
+        showResult = true;
+
+        // Mise à jour de l'état (score et réponse)
+        if (selectedIndex === currentQuestion.correct) {
+            currentCompState.score++;
+            currentCompState.answered[currentQuestionIndex] = selectedIndex; // Stocke l'index de la réponse correcte
+        } else {
+             currentCompState.answered[currentQuestionIndex] = -1; // -1 pour incorrect
+        }
+        
+        if (currentQuestionIndex === quizData[currentCompetenceIndex].questions.length - 1) {
+            currentCompState.isCompleted = true;
+        }
+
+        renderQuiz();
+        updateFinalScoreDisplay();
+    }
+
+    function nextQuestion() {
+        showResult = false;
+        selectedAnswer = null;
+        
+        const questionsInComp = quizData[currentCompetenceIndex].questions.length;
+
+        if (currentQuestionIndex < questionsInComp - 1) {
+            // Passer à la question suivante dans la même compétence
+            currentQuestionIndex++;
+        } else {
+            // Passer à la compétence suivante si la question actuelle est la dernière
+            if (currentCompetenceIndex < quizData.length - 1) {
+                currentCompetenceIndex++;
+                currentQuestionIndex = 0;
+                // Met à jour l'état des boutons de compétence
+                competenceButtons.forEach(btn => btn.classList.remove('active'));
+                competenceButtons[currentCompetenceIndex].classList.add('active');
+            } else {
+                // Quiz entièrement terminé
+                return;
+            }
+        }
+        renderQuiz();
+    }
+    
+    function previousQuestion() {
+        showResult = false;
+        selectedAnswer = null;
+        
+        if (currentQuestionIndex > 0) {
+            // Revenir à la question précédente dans la même compétence
+            currentQuestionIndex--;
+        } else {
+            // Revenir à la compétence précédente
+            if (currentCompetenceIndex > 0) {
+                currentCompetenceIndex--;
+                currentQuestionIndex = quizData[currentCompetenceIndex].questions.length - 1;
+                // Met à jour l'état des boutons de compétence
+                competenceButtons.forEach(btn => btn.classList.remove('active'));
+                competenceButtons[currentCompetenceIndex].classList.add('active');
+            } else {
+                // Première question de la première compétence
+                return;
+            }
+        }
+        
+        // Si on revient à une question déjà répondue, afficher la réponse enregistrée
+        const answeredState = quizState[currentCompetenceIndex].answered[currentQuestionIndex];
+        if (answeredState !== null) {
+            showResult = true;
+            // Si la réponse était correcte, selectedAnswer doit être l'index correct pour le rendu
+            selectedAnswer = answeredState !== -1 ? answeredState : quizData[currentCompetenceIndex].questions[currentQuestionIndex].correct; 
+        }
+
+        renderQuiz();
+    }
+
+    function resetQuiz() {
+        quizState = quizData.map(comp => ({
+            score: 0,
+            answered: Array(comp.questions.length).fill(null),
+            isCompleted: false
+        }));
+        currentCompetenceIndex = 0;
+        currentQuestionIndex = 0;
+        selectedAnswer = null;
+        showResult = false;
+        competenceButtons.forEach(btn => btn.classList.remove('active'));
+        competenceButtons[0].classList.add('active');
+        renderQuiz();
+        updateFinalScoreDisplay();
+    }
+
+
+    // --- Rendering Logic (HTML Generation) ---
+
+    function renderQuiz() {
+        const currentComp = quizData[currentCompetenceIndex];
+        const currentQuestion = currentComp.questions[currentQuestionIndex];
+        const questionsInComp = currentComp.questions.length;
+        const compScore = quizState[currentCompetenceIndex].score;
+        
+        // Vérifie si la question a été répondue pour restaurer l'état
+        const answeredIndex = quizState[currentCompetenceIndex].answered[currentQuestionIndex];
+        const isAnswered = answeredIndex !== null;
+        
+        if (isAnswered && !showResult) {
+             showResult = true;
+             // Si la réponse était incorrecte (-1), on affiche la bonne réponse pour le rendu
+             selectedAnswer = answeredIndex !== -1 ? answeredIndex : currentQuestion.correct;
+        }
+
+        let htmlContent = `
+            <div class="mb-6">
+                <h2 class="text-xl sm:text-2xl font-semibold text-orange-600 border-b pb-2 mb-4">
+                    ${currentComp.competence} (Niveau ${currentComp.level})
+                </h2>
+                <div class="text-sm text-gray-500 mb-3 flex justify-between">
+                    <p>Question ${currentQuestionIndex + 1}/${questionsInComp}</p>
+                    <p>Score actuel pour C${currentCompetenceIndex + 1} : <span class="font-bold text-gray-800">${compScore}/5</span></p>
+                </div>
+                <p class="text-lg font-medium text-gray-900">${currentQuestion.question}</p>
+            </div>
+
+            <div class="space-y-3">
+                ${currentQuestion.options.map((option, index) => {
+                    let buttonClass = 'option-button p-3 border rounded-lg text-left w-full disabled:opacity-100';
+                    let icon = '';
+
+                    if (showResult) {
+                        if (index === currentQuestion.correct) {
+                            // Bonne réponse
+                            buttonClass += ' correct border-green-500 font-bold';
+                            icon = '<span class="ml-auto text-green-600"><svg class="lucide-check-circle" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg></span>';
+                        } else if (index === selectedAnswer && selectedAnswer !== currentQuestion.correct) {
+                            // Mauvaise réponse sélectionnée
+                            buttonClass += ' incorrect border-red-500';
+                            icon = '<span class="ml-auto text-red-600"><svg class="lucide-x-circle" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg></span>';
+                        } else {
+                            // Autres options non sélectionnées
+                            buttonClass += ' bg-white text-gray-700';
+                        }
+                    } else {
+                        // Pas encore répondu
+                        buttonClass += ' bg-white text-gray-700 hover:bg-gray-100';
+                    }
+
+                    return `
+                        <button 
+                            class="${buttonClass}" 
+                            onclick="checkAnswer(${index})"
+                            ${showResult ? 'disabled' : ''}
+                        >
+                            <span class="flex items-center justify-between">
+                                <span>${option}</span>
+                                ${icon}
+                            </span>
+                        </button>
+                    `;
+                }).join('')}
+            </div>
+
+            ${showResult ? `
+                <div class="mt-6 p-4 explanation bg-orange-50 rounded-lg text-gray-700">
+                    <p class="font-semibold text-orange-700 mb-1">Explication :</p>
+                    <p>${currentQuestion.explanation}</p>
+                </div>
+            ` : ''}
+            
+            <div class="mt-8 flex justify-between items-center">
+                <button
+                    onclick="previousQuestion()"
+                    class="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors ${currentCompetenceIndex === 0 && currentQuestionIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
+                    ${currentCompetenceIndex === 0 && currentQuestionIndex === 0 ? 'disabled' : ''}
+                >
+                    <svg class="lucide-chevron-left" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                    Précédent
+                </button>
+                
+                ${!showResult ? `
+                    <p class="text-sm text-gray-500">Sélectionnez une option</p>
+                ` : `
+                    <button
+                        onclick="nextQuestion()"
+                        class="flex items-center gap-2 px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+                    >
+                        Suivant
+                        <svg class="lucide-chevron-right" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                    </button>
+                `}
+            </div>
+            
+            ${currentCompetenceIndex === quizData.length - 1 && currentQuestionIndex === questionsInComp - 1 && showResult ? `
+                 <div class="mt-8 pt-4 border-t border-gray-200 text-center">
+                    <p class="text-xl font-bold text-orange-900 mb-2">
+                        Fin du Quiz Intermédiaire !
+                    </p>
+                    <button
+                        onclick="resetQuiz()"
+                        class="flex items-center mx-auto gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                    >
+                        <svg class="lucide-rotate-ccw" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6H9M10 20l-4-4 4-4"></path><path d="M4 16h13a4 4 0 0 0 0-8h-2"></path></svg>
+                        Recommencer tous les quiz
+                    </button>
+                </div>
+            ` : ''}
+        `;
+
+        quizCard.innerHTML = htmlContent;
+    }
+
+    function changeCompetence(index) {
+        currentCompetenceIndex = index;
+        currentQuestionIndex = 0;
+        selectedAnswer = null;
+        showResult = false;
+        
+        // Gère l'état des boutons
+        competenceButtons.forEach((btn, i) => {
+            btn.classList.toggle('active', i === index);
+        });
+
+        // Tente de charger la première question de la compétence
+        const answeredIndex = quizState[currentCompetenceIndex].answered[currentQuestionIndex];
+        if (answeredIndex !== null) {
+            showResult = true;
+            selectedAnswer = answeredIndex !== -1 ? answeredIndex : quizData[currentCompetenceIndex].questions[currentQuestionIndex].correct; 
+        }
+
+        renderQuiz();
+    }
+    
+    // --- Initialization ---
+    competenceButtons.forEach((btn, index) => {
+        btn.addEventListener('click', () => changeCompetence(index));
+    });
+
+    // Rendu initial
+    renderQuiz();
+    updateFinalScoreDisplay();
+</script>
+</body>
+</html>

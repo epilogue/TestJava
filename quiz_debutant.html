@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Certification Java - Niveau Débutant (C1 à C5)</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom Styles for better visual consistency */
+        body {
+            background-color: #e5e7eb; /* Gray-100 */
+        }
+        .container-quiz {
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+        .competence-selector {
+            background-color: #1f2937; /* Gray-800 */
+        }
+        .competence-btn.active {
+            border-bottom: 3px solid #f97316; /* Orange-500 */
+            color: #f97316;
+        }
+        .option-button {
+            transition: all 0.2s;
+        }
+        .option-button:hover:not(.disabled) {
+            background-color: #f3f4f6; /* Gray-100 */
+        }
+        .option-button.correct {
+            background-color: #d1fae5; /* Green-100 */
+            border-color: #10b981; /* Green-500 */
+            pointer-events: none;
+        }
+        .option-button.incorrect {
+            background-color: #fee2e2; /* Red-100 */
+            border-color: #ef4444; /* Red-500 */
+            pointer-events: none;
+        }
+        .explanation {
+            border-left: 4px solid #f97316; /* Orange-500 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-quiz p-4">
+    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-4">
+        Quiz Débutant - Certification Java (C1 à C5) 🎓
+    </h1>
+    
+    <div class="competence-selector p-3 rounded-t-lg shadow-lg flex flex-wrap justify-center space-x-2 sm:space-x-4">
+        <button data-comp="0" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition active">C1</button>
+        <button data-comp="1" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C2</button>
+        <button data-comp="2" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C3</button>
+        <button data-comp="3" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C4</button>
+        <button data-comp="4" class="competence-btn text-white px-3 py-2 text-sm font-medium border-b-3 border-transparent hover:text-orange-300 transition">C5</button>
+    </div>
+
+    <div id="quiz-card" class="bg-white rounded-b-lg shadow-lg p-6 sm:p-8">
+        </div>
+
+    <div class="bg-white rounded-lg shadow p-4 text-sm text-gray-600 mt-6">
+        <p class="font-semibold mb-2">📋 Informations sur le quiz :</p>
+        <ul class="space-y-1">
+            <li>• Niveau de difficulté : **Débutant**</li>
+            <li>• Chaque quiz contient **5 questions** (QCM/QCU) spécifiques à la compétence.</li>
+            <li>• Score cumulé total : <span id="final-score" class="font-bold text-orange-600"></span></li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        // --- C1 : Éléments fondamentaux et algorithmie (Débutant) ---
+        {
+          competence: "C1 - Éléments fondamentaux et algorithmie",
+          level: "Débutant",
+          questions: [
+            {
+              question: "Quelle commande permet de compiler un fichier Java nommé 'Programme.java' en bytecode ?",
+              options: [
+                "java Programme.java",
+                "javac Programme.java",
+                "compile Programme.java",
+                "jvm Programme.java"
+              ],
+              correct: 1,
+              explanation: "La commande 'javac' est le compilateur Java qui transforme le code source (.java) en bytecode (.class)."
+            },
+            {
+              question: "Quelle est la signature correcte de la méthode principale (main) dans une classe Java ?",
+              options: [
+                "void main(String[] args)",
+                "public void main(String args[])",
+                "public static void main(String[] args)",
+                "static main()"
+              ],
+              correct: 2,
+              explanation: "La méthode main doit être 'public' (accessible), 'static' (appelable sans objet) et 'void' (ne retourne rien)."
+            },
+            {
+              question: "Quel type de données est le plus approprié pour stocker un nombre entier très grand, comme le nombre d'habitants sur Terre ?",
+              options: [
+                "int",
+                "short",
+                "byte",
+                "long"
+              ],
+              correct: 3,
+              explanation: "Le type 'long' est un entier de 64 bits, capable de stocker des valeurs bien plus grandes que 'int' (32 bits)."
+            },
+            {
+              question: "Que représente le 'bytecode' dans le processus de compilation Java ?",
+              options: [
+                "Le code source du programme avant compilation.",
+                "Le code binaire exécutable par le système d'exploitation.",
+                "Un format intermédiaire exécutable par la Machine Virtuelle Java (JVM).",
+                "Les métadonnées de la classe."
+              ],
+              correct: 2,
+              explanation: "Le bytecode est un ensemble d'instructions compréhensibles par la JVM, permettant la portabilité (principe 'Write Once, Run Anywhere')."
+            },
+            {
+              question: "Quelle est la convention de nommage recommandée pour une constante (valeur qui ne change jamais) en Java ?",
+              options: [
+                "CONSTANTE_MAJUSCULE",
+                "constanteMajuscule",
+                "CONSTANTE_MINUSCULE",
+                "ConstanteMajuscule"
+              ],
+              correct: 0,
+              explanation: "Les constantes sont nommées en majuscules avec des underscores (_) pour séparer les mots (SNAKE_CASE MAJUSCULE)."
+            }
+          ]
+        },
+        
+        // --- C2 : Programmation Orientée Objet (Débutant) ---
+        {
+          competence: "C2 - Programmation Orientée Objet",
+          level: "Débutant",
+          questions: [
+            {
+              question: "Quel terme décrit le mieux une 'classe' en Java ?",
+              options: [
+                "Une instance concrète d'un objet.",
+                "Un plan ou un modèle pour créer des objets.",
+                "Une simple fonction ou méthode.",
+                "Un ensemble de données non structurées."
+              ],
+              correct: 1,
+              explanation: "La classe est un modèle (ou un blueprint) qui définit la structure (attributs) et le comportement (méthodes) des objets."
+            },
+            {
+              question: "Comment appelle-t-on le processus de création d'une instance concrète d'une classe ?",
+              options: [
+                "Déclaration",
+                "Héritage",
+                "Instanciation",
+                "Compilation"
+              ],
+              correct: 2,
+              explanation: "L'instanciation est le processus d'utilisation de l'opérateur 'new' pour créer un objet à partir du modèle de la classe."
+            },
+            {
+              question: "Quel est le rôle principal d'un constructeur ?",
+              options: [
+                "Détruire l'objet lorsqu'il n'est plus utilisé.",
+                "Lancer le programme principal (main).",
+                "Initialiser l'état (les attributs) d'un nouvel objet.",
+                "Rendre une méthode accessible depuis l'extérieur de la classe."
+              ],
+              correct: 2,
+              explanation: "Le constructeur est exécuté au moment de l'instanciation (avec 'new') pour initialiser les variables membres de l'objet."
+            },
+            {
+              question: "Quel mot-clé Java est utilisé pour spécifier qu'un attribut ou une méthode est accessible depuis n'importe quelle autre classe ?",
+              options: [
+                "private",
+                "protected",
+                "default",
+                "public"
+              ],
+              correct: 3,
+              explanation: "Le modificateur 'public' assure la plus large accessibilité, permettant l'accès depuis n'importe quel paquetage ou classe."
+            },
+            {
+              question: "Lequel des éléments suivants est considéré comme un 'état' d'un objet (données) ?",
+              options: [
+                "Une méthode",
+                "Un constructeur",
+                "Un attribut (variable membre)",
+                "L'héritage"
+              ],
+              correct: 2,
+              explanation: "L'état d'un objet est défini par les valeurs de ses attributs (variables membres)."
+            }
+          ]
+        },
+        
+        // --- C3 : Structures de Contrôle, Tableaux et Collections (Débutant) ---
+        {
+          competence: "C3 - Structures de Contrôle, Tableaux et Collections",
+          level: "Débutant",
+          questions: [
+            {
+              question: "Quelle structure de contrôle est utilisée pour exécuter un bloc de code si une condition est VRAIE et un autre bloc si elle est FAUSSE ?",
+              options: [
+                "switch",
+                "for",
+                "while",
+                "if / else"
+              ],
+              correct: 3,
+              explanation: "La structure 'if/else' est la structure de choix binaire classique (condition vraie ou fausse)."
+            },
+            {
+              question: "Quelle est la principale différence d'usage entre une boucle 'for' et une boucle 'while' ?",
+              options: [
+                "Le 'for' est pour les collections, le 'while' pour les tableaux.",
+                "Le 'for' est utilisé quand le nombre d'itérations est connu d'avance (déterministe).",
+                "Le 'while' est plus rapide que le 'for'.",
+                "Le 'while' est réservé aux conditions infinies."
+              ],
+              correct: 1,
+              explanation: "La boucle 'for' est déterministe (compteur connu), tandis que 'while' est souvent utilisée lorsque l'arrêt dépend d'une condition qui peut changer à tout moment (non déterministe)."
+            },
+            {
+              question: "Comment déclare-t-on correctement un tableau d'entiers (int) nommé 'scores' de taille 10 en Java ?",
+              options: [
+                "int scores = new int[10];",
+                "Array<int> scores = 10;",
+                "int[] scores = new int[10];",
+                "scores[10];"
+              ],
+              correct: 2,
+              explanation: "La syntaxe correcte est 'Type[] nomTableau = new Type[taille];'."
+            },
+            {
+              question: "Pour un tableau nommé 'data' de taille 5, quel est l'index valide maximum que vous pouvez utiliser pour accéder à un élément ?",
+              options: [
+                "5",
+                "6",
+                "4",
+                "1"
+              ],
+              correct: 2,
+              explanation: "Les index de tableau commencent à 0. Pour une taille N, les index vont de 0 à N-1. Pour une taille 5, l'index maximum est 4."
+            },
+            {
+              question: "Quelle est la principale caractéristique de la classe `ArrayList` par rapport à un tableau standard (array) ?",
+              options: [
+                "Elle stocke uniquement des nombres.",
+                "Elle est plus rapide en accès par index.",
+                "Sa taille est fixe et définie à l'initialisation.",
+                "Sa taille est dynamique et peut grandir ou rétrécir."
+              ],
+              correct: 3,
+              explanation: "Contrairement aux tableaux, l'ArrayList fait partie des Collections dont la taille peut être ajustée dynamiquement après la création."
+            }
+          ]
+        },
+        
+        // --- C4 : Gestion des Exceptions et Entrées/Sorties (Débutant) ---
+        {
+          competence: "C4 - Gestion des Exceptions et Entrées/Sorties (I/O)",
+          level: "Débutant",
+          questions: [
+            {
+              question: "Quel bloc de code est utilisé pour inclure le code susceptible de générer une exception ?",
+              options: [
+                "throw",
+                "finally",
+                "catch",
+                "try"
+              ],
+              correct: 3,
+              explanation: "Le code risqué doit être placé dans le bloc 'try' pour tenter son exécution."
+            },
+            {
+              question: "L'exception `ArithmeticException` (ex: division par zéro) est une exception...",
+              options: [
+                "Vérifiée (Checked)",
+                "Non vérifiée (Unchecked) / Erreur d'exécution",
+                "Non gérable",
+                "d'I/O (Input/Output)"
+              ],
+              correct: 1,
+              explanation: "Les exceptions d'exécution (Runtime Exceptions) comme ArithmeticException sont non vérifiées, elles ne nécessitent pas de 'throws' dans la signature de la méthode."
+            },
+            {
+              question: "Quel code permet de s'assurer qu'une ressource (comme un fichier) est fermée, qu'une exception ait été levée ou non ?",
+              options: [
+                "Le bloc 'catch'",
+                "Le bloc 'finally'",
+                "L'instruction 'throw'",
+                "L'instruction 'break'"
+              ],
+              correct: 1,
+              explanation: "Le bloc 'finally' s'exécute toujours, que le code dans 'try' se termine normalement ou qu'une exception soit capturée ou non."
+            },
+            {
+              question: "Quelle est l'exception la plus fréquente lorsqu'on tente d'accéder à un fichier qui n'existe pas en lecture ?",
+              options: [
+                "NullPointerException",
+                "FileNotFoundException (ou IOException)",
+                "NumberFormatException",
+                "InterruptedException"
+              ],
+              correct: 1,
+              explanation: "La 'FileNotFoundException' est une exception vérifiée (Checked) courante dans les opérations de lecture de fichiers."
+            },
+            {
+              question: "Lequel de ces éléments n'est **pas** une composante de la gestion des exceptions ?",
+              options: [
+                "try",
+                "catch",
+                "throw",
+                "switch"
+              ],
+              correct: 3,
+              explanation: "'switch' est une structure de contrôle de flux (choix multiple), pas un élément de l'architecture de gestion des exceptions."
+            }
+          ]
+        },
+        
+        // --- C5 : Connexion à une base de données avec JDBC (Débutant) ---
+        {
+          competence: "C5 - Connexion à une base de données avec JDBC",
+          level: "Débutant",
+          questions: [
+            {
+              question: "Quelle classe JDBC est principalement utilisée pour établir la connexion à une base de données ?",
+              options: [
+                "Statement",
+                "ResultSet",
+                "DriverManager",
+                "ConnectionFactory"
+              ],
+              correct: 2,
+              explanation: "Le 'DriverManager' est la classe statique utilisée pour obtenir un objet 'Connection' à partir d'une URL, d'un utilisateur et d'un mot de passe."
+            },
+            {
+              question: "Quel objet est utilisé pour envoyer une requête SQL simple (non paramétrée) à la base de données ?",
+              options: [
+                "PreparedStatement",
+                "Connection",
+                "Statement",
+                "ResultSet"
+              ],
+              correct: 2,
+              explanation: "L'objet 'Statement' est la forme de base pour exécuter des requêtes SQL statiques."
+            },
+            {
+              question: "Quelle méthode doit-on utiliser sur un objet Statement ou PreparedStatement pour exécuter une requête `INSERT` ou `UPDATE` ?",
+              options: [
+                "executeQuery()",
+                "execute()",
+                "executeUpdate()",
+                "executeInsert()"
+              ],
+              correct: 2,
+              explanation: "'executeUpdate()' est utilisé pour les requêtes DML (Data Manipulation Language) qui modifient les données et retourne le nombre de lignes affectées."
+            },
+            {
+              question: "Quelle méthode de l'objet `ResultSet` permet d'avancer au prochain enregistrement ?",
+              options: [
+                "next()",
+                "forward()",
+                "move()",
+                "read()"
+              ],
+              correct: 0,
+              explanation: "La méthode 'next()' fait avancer le curseur à l'enregistrement suivant et retourne 'true' s'il existe un enregistrement, 'false' sinon."
+            },
+            {
+              question: "L'exception de base levée par l'API JDBC en cas d'erreur de base de données est :",
+              options: [
+                "IOException",
+                "DatabaseException",
+                "SQLException",
+                "SystemException"
+              ],
+              correct: 2,
+              explanation: "Toutes les erreurs et avertissements liés à la base de données dans JDBC sont encapsulés dans la 'SQLException'."
+            }
+          ]
+        }
+    ];
+
+    let currentCompetenceIndex = 0;
+    let currentQuestionIndex = 0;
+    let selectedAnswer = null;
+    let showResult = false;
+    // Stockage du score et des réponses par compétence: [score, reponse_index_selectionné_par_question]
+    let quizState = quizData.map(comp => ({
+        score: 0,
+        answered: Array(comp.questions.length).fill(null), // null: non répondu, -1: réponse incorrecte, index: réponse correcte
+        isCompleted: false
+    }));
+
+    const quizCard = document.getElementById('quiz-card');
+    const competenceButtons = document.querySelectorAll('.competence-btn');
+    const finalScoreDisplay = document.getElementById('final-score');
+
+    const TOTAL_QUESTIONS = quizData.reduce((sum, comp) => sum + comp.questions.length, 0);
+
+    // --- Core Logic ---
+
+    function updateFinalScoreDisplay() {
+        const totalScore = quizState.reduce((sum, state) => sum + state.score, 0);
+        finalScoreDisplay.textContent = `${totalScore}/${TOTAL_QUESTIONS} (${Math.round((totalScore / TOTAL_QUESTIONS) * 100)}%)`;
+    }
+
+    function checkAnswer(selectedIndex) {
+        if (showResult) return; // Empêche de répondre deux fois
+
+        const currentCompState = quizState[currentCompetenceIndex];
+        const currentQuestion = quizData[currentCompetenceIndex].questions[currentQuestionIndex];
+        
+        selectedAnswer = selectedIndex;
+        showResult = true;
+
+        // Mise à jour de l'état (score et réponse)
+        if (selectedIndex === currentQuestion.correct) {
+            currentCompState.score++;
+            currentCompState.answered[currentQuestionIndex] = selectedIndex; // Stocke l'index de la réponse correcte
+        } else {
+             currentCompState.answered[currentQuestionIndex] = -1; // -1 pour incorrect
+        }
+        
+        if (currentQuestionIndex === quizData[currentCompetenceIndex].questions.length - 1) {
+            currentCompState.isCompleted = true;
+        }
+
+        renderQuiz();
+        updateFinalScoreDisplay();
+    }
+
+    function nextQuestion() {
+        showResult = false;
+        selectedAnswer = null;
+        
+        const questionsInComp = quizData[currentCompetenceIndex].questions.length;
+
+        if (currentQuestionIndex < questionsInComp - 1) {
+            // Passer à la question suivante dans la même compétence
+            currentQuestionIndex++;
+        } else {
+            // Passer à la compétence suivante si la question actuelle est la dernière
+            if (currentCompetenceIndex < quizData.length - 1) {
+                currentCompetenceIndex++;
+                currentQuestionIndex = 0;
+                // Met à jour l'état des boutons de compétence
+                competenceButtons.forEach(btn => btn.classList.remove('active'));
+                competenceButtons[currentCompetenceIndex].classList.add('active');
+            } else {
+                // Quiz entièrement terminé
+                return;
+            }
+        }
+        renderQuiz();
+    }
+    
+    function previousQuestion() {
+        showResult = false;
+        selectedAnswer = null;
+        
+        if (currentQuestionIndex > 0) {
+            // Revenir à la question précédente dans la même compétence
+            currentQuestionIndex--;
+        } else {
+            // Revenir à la compétence précédente
+            if (currentCompetenceIndex > 0) {
+                currentCompetenceIndex--;
+                currentQuestionIndex = quizData[currentCompetenceIndex].questions.length - 1;
+                // Met à jour l'état des boutons de compétence
+                competenceButtons.forEach(btn => btn.classList.remove('active'));
+                competenceButtons[currentCompetenceIndex].classList.add('active');
+            } else {
+                // Première question de la première compétence
+                return;
+            }
+        }
+        
+        // Si on revient à une question déjà répondue, afficher la réponse enregistrée
+        const answeredState = quizState[currentCompetenceIndex].answered[currentQuestionIndex];
+        if (answeredState !== null) {
+            showResult = true;
+            // Si la réponse était correcte, selectedAnswer doit être l'index correct pour le rendu
+            selectedAnswer = answeredState !== -1 ? answeredState : quizData[currentCompetenceIndex].questions[currentQuestionIndex].correct; 
+        }
+
+        renderQuiz();
+    }
+
+    function resetQuiz() {
+        quizState = quizData.map(comp => ({
+            score: 0,
+            answered: Array(comp.questions.length).fill(null),
+            isCompleted: false
+        }));
+        currentCompetenceIndex = 0;
+        currentQuestionIndex = 0;
+        selectedAnswer = null;
+        showResult = false;
+        competenceButtons.forEach(btn => btn.classList.remove('active'));
+        competenceButtons[0].classList.add('active');
+        renderQuiz();
+        updateFinalScoreDisplay();
+    }
+
+
+    // --- Rendering Logic (HTML Generation) ---
+
+    function renderQuiz() {
+        const currentComp = quizData[currentCompetenceIndex];
+        const currentQuestion = currentComp.questions[currentQuestionIndex];
+        const questionsInComp = currentComp.questions.length;
+        const compScore = quizState[currentCompetenceIndex].score;
+        
+        // Vérifie si la question a été répondue pour restaurer l'état
+        const answeredIndex = quizState[currentCompetenceIndex].answered[currentQuestionIndex];
+        const isAnswered = answeredIndex !== null;
+        
+        if (isAnswered && !showResult) {
+             showResult = true;
+             // Si la réponse était incorrecte (-1), on affiche la bonne réponse pour le rendu
+             selectedAnswer = answeredIndex !== -1 ? answeredIndex : currentQuestion.correct;
+        }
+
+        let htmlContent = `
+            <div class="mb-6">
+                <h2 class="text-xl sm:text-2xl font-semibold text-orange-600 border-b pb-2 mb-4">
+                    ${currentComp.competence} (Niveau ${currentComp.level})
+                </h2>
+                <div class="text-sm text-gray-500 mb-3 flex justify-between">
+                    <p>Question ${currentQuestionIndex + 1}/${questionsInComp}</p>
+                    <p>Score actuel pour C${currentCompetenceIndex + 1} : <span class="font-bold text-gray-800">${compScore}/5</span></p>
+                </div>
+                <p class="text-lg font-medium text-gray-900">${currentQuestion.question}</p>
+            </div>
+
+            <div class="space-y-3">
+                ${currentQuestion.options.map((option, index) => {
+                    let buttonClass = 'option-button p-3 border rounded-lg text-left w-full disabled:opacity-100';
+                    let icon = '';
+
+                    if (showResult) {
+                        if (index === currentQuestion.correct) {
+                            // Bonne réponse
+                            buttonClass += ' correct border-green-500 font-bold';
+                            icon = '<span class="ml-auto text-green-600"><svg class="lucide-check-circle" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg></span>';
+                        } else if (index === selectedAnswer && selectedAnswer !== currentQuestion.correct) {
+                            // Mauvaise réponse sélectionnée
+                            buttonClass += ' incorrect border-red-500';
+                            icon = '<span class="ml-auto text-red-600"><svg class="lucide-x-circle" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg></span>';
+                        } else {
+                            // Autres options non sélectionnées
+                            buttonClass += ' bg-white text-gray-700';
+                        }
+                    } else {
+                        // Pas encore répondu
+                        buttonClass += ' bg-white text-gray-700 hover:bg-gray-100';
+                    }
+
+                    return `
+                        <button 
+                            class="${buttonClass}" 
+                            onclick="checkAnswer(${index})"
+                            ${showResult ? 'disabled' : ''}
+                        >
+                            <span class="flex items-center justify-between">
+                                <span>${option}</span>
+                                ${icon}
+                            </span>
+                        </button>
+                    `;
+                }).join('')}
+            </div>
+
+            ${showResult ? `
+                <div class="mt-6 p-4 explanation bg-orange-50 rounded-lg text-gray-700">
+                    <p class="font-semibold text-orange-700 mb-1">Explication :</p>
+                    <p>${currentQuestion.explanation}</p>
+                </div>
+            ` : ''}
+            
+            <div class="mt-8 flex justify-between items-center">
+                <button
+                    onclick="previousQuestion()"
+                    class="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors ${currentCompetenceIndex === 0 && currentQuestionIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
+                    ${currentCompetenceIndex === 0 && currentQuestionIndex === 0 ? 'disabled' : ''}
+                >
+                    <svg class="lucide-chevron-left" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                    Précédent
+                </button>
+                
+                ${!showResult ? `
+                    <p class="text-sm text-gray-500">Sélectionnez une option</p>
+                ` : `
+                    <button
+                        onclick="nextQuestion()"
+                        class="flex items-center gap-2 px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+                    >
+                        Suivant
+                        <svg class="lucide-chevron-right" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                    </button>
+                `}
+            </div>
+            
+            ${currentCompetenceIndex === quizData.length - 1 && currentQuestionIndex === questionsInComp - 1 && showResult ? `
+                 <div class="mt-8 pt-4 border-t border-gray-200 text-center">
+                    <p class="text-xl font-bold text-orange-900 mb-2">
+                        Fin du Quiz Débutant !
+                    </p>
+                    <button
+                        onclick="resetQuiz()"
+                        class="flex items-center mx-auto gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                    >
+                        <svg class="lucide-rotate-ccw" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6H9M10 20l-4-4 4-4"></path><path d="M4 16h13a4 4 0 0 0 0-8h-2"></path></svg>
+                        Recommencer tous les quiz
+                    </button>
+                </div>
+            ` : ''}
+        `;
+
+        quizCard.innerHTML = htmlContent;
+    }
+
+    function changeCompetence(index) {
+        currentCompetenceIndex = index;
+        currentQuestionIndex = 0;
+        selectedAnswer = null;
+        showResult = false;
+        
+        // Gère l'état des boutons
+        competenceButtons.forEach((btn, i) => {
+            btn.classList.toggle('active', i === index);
+        });
+
+        // Tente de charger la première question de la compétence
+        const answeredIndex = quizState[currentCompetenceIndex].answered[currentQuestionIndex];
+        if (answeredIndex !== null) {
+            showResult = true;
+            selectedAnswer = answeredIndex !== -1 ? answeredIndex : quizData[currentCompetenceIndex].questions[currentQuestionIndex].correct; 
+        }
+
+        renderQuiz();
+    }
+    
+    // --- Initialization ---
+    competenceButtons.forEach((btn, index) => {
+        btn.addEventListener('click', () => changeCompetence(index));
+    });
+
+    // Rendu initial
+    renderQuiz();
+    updateFinalScoreDisplay();
+</script>
+</body>
+</html>

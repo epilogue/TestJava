@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C3 - Études de Cas Java (Structures, Tableaux, Collections)</title>
+    <style>
+        /* Base Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        h1 {
+            color: #009966; /* Nouvelle couleur pour C3 (Vert/Teal) */
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Level Toggle Buttons */
+        .level-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .level-btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            transition: all 0.2s;
+        }
+        .level-btn:hover {
+            border-color: #00cc99;
+            color: #00cc99;
+        }
+        .level-btn.active {
+            background-color: #009966;
+            color: #fff;
+            border-color: #009966;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Exercise Card */
+        .exercise-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .exercise-card h3 {
+            font-size: 1.5rem;
+            color: #009966; /* Couleur C3 */
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .exercise-card p.criteria {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Solution/Code Block */
+        .solution-toggle {
+            display: block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #eeffee;
+            color: #009966;
+            border: 1px solid #ccffdd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .solution-toggle:hover {
+            background-color: #ccffdd;
+        }
+        
+        .solution-content {
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .solution-content.hidden {
+            display: none;
+        }
+        .solution-content pre {
+            margin: 0;
+            padding: 1rem;
+            background-color: #272822; /* Fond pour le code */
+            color: #f8f8f2;
+            overflow-x: auto;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        /* Color Coding for Levels (C3-specific) */
+        .level-debutant { border-left: 5px solid #009966; }
+        .level-intermediaire { border-left: 5px solid #005533; }
+        .level-avance { border-left: 5px solid #00331a; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>C3 : Structures de Contrôle, Tableaux et Collections - Études de Cas (15/15)</h1>
+    <p style="text-align: center; margin-bottom: 2rem;">Sélectionnez un niveau de difficulté pour afficher les 5 exercices correspondants de la compétence C3.</p>
+
+    <div class="level-selector">
+        <button class="level-btn active" data-level="debutant">Débutant (5 Cas)</button>
+        <button class="level-btn" data-level="intermediaire">Intermédiaire (5 Cas)</button>
+        <button class="level-btn" data-level="avance">Avancé (5 Cas)</button>
+    </div>
+
+    <div id="exercises-container">
+        </div>
+
+</div>
+
+<script>
+    const allStudies = [
+        // --- NIVEAU DÉBUTANT (5 CAS) - Structures de contrôle et Tableaux 1D ---
+        {
+            level: "debutant",
+            title: "Étude de Cas 1 : Structure de choix conditionnel (if/else if/else)",
+            criteria: "(Critères visés : Cr1 - Choix simple/multiple)",
+            problem: "Créez une méthode `verifierNombre(int n)` qui affiche si l'entier `n` est :<br> **Positif** (strictement supérieur à 0),<br> **Négatif** (strictement inférieur à 0),<br> ou **Nul** (égal à 0).",
+            solution: `class Verificateur {
+    // Cr1 : Utilisation de if/else if/else
+    public static void verifierNombre(int n) {
+        if (n > 0) {
+            System.out.println(n + " est positif.");
+        } else if (n < 0) {
+            System.out.println(n + " est négatif.");
+        } else {
+            System.out.println(n + " est nul.");
+        }
+    }
+}
+
+public class TestIfElse {
+    public static void main(String[] args) {
+        Verificateur.verifierNombre(5);
+        Verificateur.verifierNombre(-2);
+        Verificateur.verifierNombre(0);
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 2 : Structure de choix multiple (switch)",
+            criteria: "(Critères visés : Cr1 - Choix simple/multiple, Cr2 - switch)",
+            problem: "Créez une méthode `afficherJour(int jour)` qui, en utilisant la structure `switch`,<br> affiche le nom du jour correspondant (1 = Lundi, 7 = Dimanche). <br>Pour toute autre valeur, affichez 'Jour invalide'.",
+            solution: `class Semaine {
+    // Cr2 : Utilisation de switch
+    public static void afficherJour(int jour) {
+        switch (jour) {
+            case 1:
+                System.out.println("Lundi");
+                break;
+            case 2:
+                System.out.println("Mardi");
+                break;
+            case 3:
+                System.out.println("Mercredi");
+                break;
+            case 4:
+                System.out.println("Jeudi");
+                break;
+            case 5:
+                System.out.println("Vendredi");
+                break;
+            case 6:
+                System.out.println("Samedi");
+                break;
+            case 7:
+                System.out.println("Dimanche");
+                break;
+            default: // Cr1 : Gestion des cas non prévus
+                System.out.println("Jour invalide");
+        }
+    }
+}
+
+public class TestSwitch {
+    public static void main(String[] args) {
+        Semaine.afficherJour(3);
+        Semaine.afficherJour(9);
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 3 : Structure itérative (for)",
+            criteria: "(Critères visés : Cr3 - Boucles déterministes, Cr4 - for)",
+            problem: "Utilisez une boucle `for` <br> pour calculer et afficher la somme des 10 premiers entiers positifs (de 1 à 10). <br>Le résultat attendu est 55.",
+            solution: `public class TestFor {
+    public static void main(String[] args) {
+        int somme = 0;
+        
+        // Cr4 : Boucle for
+        for (int i = 1; i <= 10; i++) {
+            somme += i;
+        }
+        
+        // Cr3 : Affichage du résultat après l'itération
+        System.out.println("La somme des 10 premiers entiers est : " + somme);
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 4 : Structure itérative (while)",
+            criteria: "(Critères visés : Cr3 - Boucles non déterministes, Cr5 - while)",
+            problem: "Utilisez une boucle `while` <br>pour déterminer combien de fois le nombre `x` (initialisé à 5) doit être doublé (`x = x * 2`)<br> pour qu'il dépasse 100. <br>Affichez le nombre d'itérations nécessaires.",
+            solution: `public class TestWhile {
+    public static void main(String[] args) {
+        int x = 5;
+        int iterations = 0;
+        
+        // Cr5 : Boucle while (non déterministe)
+        while (x <= 100) {
+            x *= 2; 
+            iterations++;
+        }
+        
+        System.out.println("Valeur finale de x : " + x);
+        System.out.println("Nombre d'itérations nécessaires : " + iterations);
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 5 : Déclaration et initialisation de tableaux 1D",
+            criteria: "(Critères visés : Cr6 - Tableaux 1D, Cr7 - Accès)",
+            problem: "Déclarez un tableau d'entiers nommé `notes` de taille 5.<br> Initialisez-le avec les valeurs `12, 15, 10, 18, 14`. <br>Affichez la taille du tableau, puis la valeur de l'élément à l'index 2 .",
+            solution: `public class TestTableau1D {
+    public static void main(String[] args) {
+        // Cr6 : Déclaration et initialisation (forme courte)
+        int[] notes = {12, 15, 10, 18, 14};
+        
+        System.out.println("Taille du tableau : " + notes.length);
+        
+        // Cr7 : Accès à l'élément à l'index 2 (qui est le 3e élément)
+        System.out.println("Note à l'index 2 : " + notes[2]); 
+    }
+}`
+        },
+        
+        // --- NIVEAU INTERMÉDIAIRE (5 CAS) - Boucles avancées et Tableaux 2D ---
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 6 : Boucles imbriquées (Tableau 2D)",
+            criteria: "(Critères visés : Cr4 - Boucles imbriquées, Cr6 - Tableaux 2D)",
+            problem: "Déclarez un tableau 2D d'entiers `matrice` de taille 3x3 .<br> Utilisez des boucles `for` imbriquées pour l'initialiser de sorte que chaque élément `[i][j]` contienne la valeur de `i * j`. <br>Affichez la matrice ligne par ligne.",
+            solution: `public class TestMatrice {
+    public static void main(String[] args) {
+        // Cr6 : Déclaration du tableau 2D
+        int[][] matrice = new int[3][3];
+        
+        // Cr4 : Boucles imbriquées pour l'initialisation
+        for (int i = 0; i < matrice.length; i++) {
+            for (int j = 0; j < matrice[i].length; j++) {
+                matrice[i][j] = i * j; 
+            }
+        }
+        
+        // Affichage (boucles imbriquées pour la lecture)
+        System.out.println("Matrice 3x3 :");
+        for (int i = 0; i < matrice.length; i++) {
+            for (int j = 0; j < matrice[i].length; j++) {
+                System.out.print(matrice[i][j] + " ");
+            }
+            System.out.println(); // Saut de ligne
+        }
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 7 : Agrégation de données dans un tableau 2D",
+            criteria: "(Critères visés : Cr6 - Tableaux 2D, Cr7 - Parcours et calcul)",
+            problem: "Étant donnée la matrice 2D `{{1, 2}, {3, 4}, {5, 6}}`,<br> écrivez le code pour parcourir tous ses éléments (Cr7) <br>calculer la somme totale de ceux-ci.",
+            solution: `public class TestSommeMatrice {
+    public static void main(String[] args) {
+        // Cr6 : Initialisation
+        int[][] matrice = {{1, 2}, {3, 4}, {5, 6}};
+        int somme = 0;
+        
+        // Cr7 : Parcours et calcul de la somme
+        for (int i = 0; i < matrice.length; i++) {
+            for (int j = 0; j < matrice[i].length; j++) {
+                somme += matrice[i][j];
+            }
+        }
+        
+        System.out.println("La somme totale des éléments est : " + somme); // Résultat : 21
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 8 : Boucle for-each (Améliorée)",
+            criteria: "(Critères visés : Cr4 - Boucle améliorée, Cr7 - Calcul d'agrégation)",
+            problem: "Soit un tableau `prix` d'éléments `double`. <br>Utilisez la boucle `for-each` pour calculer la moyenne de tous les prix dans le tableau. <br>Affichez la somme et la moyenne.",
+            solution: `public class TestForEach {
+    public static void main(String[] args) {
+        double[] prix = {15.50, 20.00, 5.25, 18.75};
+        double somme = 0.0;
+        
+        // Cr4 : Boucle for-each pour la lecture et la sommation
+        for (double p : prix) {
+            somme += p;
+        }
+        
+        double moyenne = somme / prix.length;
+        
+        System.out.println("Somme totale : " + somme);
+        System.out.println("Moyenne des prix : " + moyenne);
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 9 : Instructions de saut (break/continue)",
+            criteria: "(Critères visés : Cr3 - Instructions break et continue)",
+            problem: "Parcourez une boucle de 1 à 10.<br> Utilisez `continue` pour ignorer l'affichage du chiffre 5.<br> Utilisez `break` pour arrêter la boucle dès que vous atteignez le chiffre 8. <br>Affichez uniquement les chiffres qui ne sont pas ignorés ni après l'arrêt.",
+            solution: `public class TestSaut {
+    public static void main(String[] args) {
+        for (int i = 1; i <= 10; i++) {
+            
+            if (i == 8) {
+                // Cr3 : Arrêter la boucle
+                break; 
+            }
+            
+            if (i == 5) {
+                // Cr3 : Passer à l'itération suivante
+                continue; 
+            }
+            
+            System.out.println("Affichage de : " + i);
+        }
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 10 : Introduction à ArrayList (ajout et taille)",
+            criteria: "(Critères visés : Cr8 - Collection ArrayList, Cr9 - Génériques)",
+            problem: "Importez et utilisez `ArrayList`. <br>Créez une `ArrayList` de type `String`.<br> Ajoutez les éléments 'Paris', 'Lyon', 'Marseille'. <br>Affichez la taille de la liste, puis l'élément à l'index 1 (`get(1)`).",
+            solution: `import java.util.ArrayList;
+
+public class TestArrayListBasique {
+    public static void main(String[] args) {
+        // Cr8, Cr9 : Déclaration d'une ArrayList typée String
+        ArrayList<String> villes = new ArrayList<>(); 
+        
+        villes.add("Paris");
+        villes.add("Lyon");
+        villes.add("Marseille");
+        
+        System.out.println("Taille de la liste : " + villes.size());
+        
+        // Afficher l'élément à l'index 1
+        System.out.println("Ville à l'index 1 : " + villes.get(1));
+    }
+}`
+        },
+
+        // --- NIVEAU AVANCÉ (5 CAS) - Tableaux d'Objets et Collections Avancées ---
+        {
+            level: "avance",
+            title: "Étude de Cas 11 : Tableau d'Objets",
+            criteria: "(Critères visés : Cr6 - Tableau d'objets, Cr7 - Parcours et accès)",
+            problem: "Créez une classe simple `Livre` (attribut `titre`). <br>Dans le `main`, déclarez un tableau de type `Livre` de taille 3.<br> Instanciez 3 objets `Livre` dans ce tableau .<br> Utilisez une boucle `for`pour parcourir le tableau et afficher le titre de chaque livre.",
+            solution: `class Livre {
+    String titre;
+    
+    public Livre(String titre) {
+        this.titre = titre;
+    }
+}
+
+public class TestTableauObjets {
+    public static void main(String[] args) {
+        // Cr6 : Déclaration du tableau d'objets
+        Livre[] bibliotheque = new Livre[3];
+        
+        // Instanciation des objets
+        bibliotheque[0] = new Livre("Le Petit Prince");
+        bibliotheque[1] = new Livre("Germinal");
+        bibliotheque[2] = new Livre("1984");
+        
+        System.out.println("Titres dans la bibliothèque :");
+        
+        // Cr7 : Parcours du tableau
+        for (int i = 0; i < bibliotheque.length; i++) {
+            System.out.println("- " + bibliotheque[i].titre);
+        }
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 12 : Manipulation de ArrayList (suppression)",
+            criteria: "(Critères visés : Cr8 - Collection ArrayList, Cr7 - Itération et manipulation)",
+            problem: "Soit une `ArrayList<Double>` de prix.<br> Après avoir ajouté quelques prix, retirez l'élément à l'index 0.<br> Affichez la liste complète **avant** et **après** la suppression.",
+            solution: `import java.util.ArrayList;
+
+public class TestArrayListAvance {
+    public static void main(String[] args) {
+        ArrayList<Double> prix = new ArrayList<>();
+        prix.add(99.99);
+        prix.add(19.99);
+        prix.add(45.50);
+        
+        System.out.println("Liste AVANT suppression : " + prix);
+        
+        // Cr8 : Suppression de l'élément à l'index 0
+        prix.remove(0); 
+        
+        System.out.println("Liste APRÈS suppression : " + prix);
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 13 : Recherche Séquentielle (dans un tableau)",
+            criteria: "(Critères visés : Cr7 - Algorithme de recherche, Cr3 - Condition de sortie)",
+            problem: "Implémentez un algorithme de **recherche séquentielle** dans un tableau de noms `String`. <br>La méthode doit retourner l'index du nom recherché, ou `-1` si le nom n'est pas trouvé .<br> Testez avec un nom présent et un nom absent.",
+            solution: `public class RechercheSequentielle {
+    public static int trouverIndex(String[] tableau, String nomRecherche) {
+        // Cr7 : Algorithme de recherche
+        for (int i = 0; i < tableau.length; i++) {
+            if (tableau[i].equals(nomRecherche)) {
+                return i; // Trouvé
+            }
+        }
+        return -1; // Non trouvé (Cr3 : Condition de sortie)
+    }
+    
+    public static void main(String[] args) {
+        String[] noms = {"Alice", "Bob", "Charlie", "David"};
+        
+        int index1 = trouverIndex(noms, "Charlie");
+        System.out.println("Charlie trouvé à l'index : " + index1); // 2
+        
+        int index2 = trouverIndex(noms, "Eve");
+        System.out.println("Eve trouvé à l'index : " + index2); // -1
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 14 : Tri basique (Tri à bulles)",
+            criteria: "(Critères visés : Cr7 - Algorithme de tri, Cr4 - Boucles imbriquées)",
+            problem: "Étant donné un tableau d'entiers non trié `[5, 1, 4, 2, 8]`,<br> implémentez l'algorithme de **Tri à bulles** (Bubble Sort) pour le trier dans l'ordre croissant.<br> Affichez le tableau trié.",
+            solution: `import java.util.Arrays;
+
+public class TriABulles {
+    public static void main(String[] args) {
+        int[] tableau = {5, 1, 4, 2, 8};
+        int n = tableau.length;
+        
+        // Cr7, Cr4 : Tri à bulles avec boucles imbriquées
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                // Si l'élément courant est plus grand que le suivant, échanger
+                if (tableau[j] > tableau[j + 1]) {
+                    int temp = tableau[j];
+                    tableau[j] = tableau[j + 1];
+                    tableau[j + 1] = temp;
+                }
+            }
+        }
+        
+        System.out.println("Tableau trié : " + Arrays.toString(tableau));
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 15 : Introduction à la Map (Clé-Valeur)",
+            criteria: "(Critères visés : Cr8 - Collection Map, Cr9 - Clé-Valeur, Génériques)",
+            problem: "Importez et utilisez la `HashMap`.<br> Créez une `HashMap<String, String>` pour stocker des paires Pays (clé) / Capitale (valeur). <br>Ajoutez 'France':'Paris' et 'Allemagne':'Berlin'.<br> Récupérez et affichez la capitale de la France.",
+            solution: `import java.util.HashMap;
+import java.util.Map; // Bonne pratique
+
+public class TestMap {
+    public static void main(String[] args) {
+        // Cr8, Cr9 : Déclaration d'une HashMap typée
+        Map<String, String> capitales = new HashMap<>(); 
+        
+        // Ajout d'éléments (Clé - Valeur)
+        capitales.put("France", "Paris");
+        capitales.put("Allemagne", "Berlin");
+        
+        // Récupération de l'élément
+        String capitaleFrance = capitales.get("France");
+        
+        System.out.println("La capitale de la France est : " + capitaleFrance);
+        
+        // Afficher toutes les clés pour vérification
+        System.out.println("Pays enregistrés : " + capitales.keySet());
+    }
+}`
+        }
+    ];
+
+    const exercisesContainer = document.getElementById('exercises-container');
+    const levelButtons = document.querySelectorAll('.level-btn');
+    let currentLevel = 'debutant';
+
+    /**
+     * Rend les exercices pour un niveau donné.
+     * @param {string} level 
+     */
+    function renderExercises(level) {
+        exercisesContainer.innerHTML = '';
+        const filteredStudies = allStudies.filter(study => study.level === level);
+
+        filteredStudies.forEach((study, index) => {
+            const card = document.createElement('div');
+            // Mise à jour des classes CSS pour C3
+            card.className = `exercise-card level-${level}`;
+            
+            // Le numéro de cas correspond à son index global (1 à 15) pour une référence simple
+            const caseNumber = allStudies.indexOf(study) + 1;
+
+            // Utilisation des Template Literals pour générer le HTML de la carte
+            card.innerHTML = `
+                <h3>${study.title} (Cas ${caseNumber}/15 - C3)</h3>
+                <p class="criteria">${study.criteria}</p>
+                <p><strong>Problème :</strong> ${study.problem}</p>
+                
+                <button class="solution-toggle">Afficher la solution Java</button>
+                <div class="solution-content hidden">
+                    <pre><code class="language-java">${study.solution.trim()}</code></pre>
+                </div>
+            `;
+
+            const toggleButton = card.querySelector('.solution-toggle');
+            const solutionContent = card.querySelector('.solution-content');
+            
+            // Logique de bascule pour afficher/masquer la solution
+            toggleButton.addEventListener('click', () => {
+                const isHidden = solutionContent.classList.toggle('hidden');
+                
+                // Mettre à jour le texte du bouton en fonction de l'état
+                if (isHidden) {
+                    toggleButton.textContent = 'Afficher la solution Java';
+                } else {
+                    toggleButton.textContent = 'Masquer la solution';
+                }
+            });
+
+            exercisesContainer.appendChild(card);
+        });
+    }
+
+    /**
+     * Change le niveau affiché et met à jour les boutons.
+     * @param {string} level 
+     */
+    function changeLevel(level) {
+        currentLevel = level;
+        
+        // Mise à jour de l'état des boutons
+        levelButtons.forEach(btn => {
+            if (btn.dataset.level === level) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        renderExercises(level);
+    }
+
+    // --- Initialisation ---
+    // Attacher les événements aux boutons
+    levelButtons.forEach(btn => {
+        btn.addEventListener('click', () => changeLevel(btn.dataset.level));
+    });
+
+    // Rendu initial (Débutant par défaut)
+    changeLevel(currentLevel);
+
+</script>
+</body>
+</html>
+

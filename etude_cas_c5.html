@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C5 - Études de Cas Java (JDBC et Persistance)</title>
+    <style>
+        /* Base Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        h1 {
+            color: #004c8f; /* Nouvelle couleur pour C5 (Bleu Marine) */
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Level Toggle Buttons */
+        .level-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .level-btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            transition: all 0.2s;
+        }
+        .level-btn:hover {
+            border-color: #007bff;
+            color: #007bff;
+        }
+        .level-btn.active {
+            background-color: #004c8f;
+            color: #fff;
+            border-color: #004c8f;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Exercise Card */
+        .exercise-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .exercise-card h3 {
+            font-size: 1.5rem;
+            color: #004c8f; /* Couleur C5 */
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .exercise-card p.criteria {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Solution/Code Block */
+        .solution-toggle {
+            display: block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #e6f0ff;
+            color: #004c8f;
+            border: 1px solid #b3ccff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .solution-toggle:hover {
+            background-color: #b3ccff;
+        }
+        
+        .solution-content {
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .solution-content.hidden {
+            display: none;
+        }
+        .solution-content pre {
+            margin: 0;
+            padding: 1rem;
+            background-color: #272822; /* Fond pour le code */
+            color: #f8f8f2;
+            overflow-x: auto;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        /* Color Coding for Levels (C5-specific) */
+        .level-debutant { border-left: 5px solid #007bff; }
+        .level-intermediaire { border-left: 5px solid #004c8f; }
+        .level-avance { border-left: 5px solid #002e5b; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>C5 : Connexion à une base de données avec JDBC - Études de Cas (15/15)</h1>
+    <p style="text-align: center; margin-bottom: 2rem;">Sélectionnez un niveau de difficulté pour afficher les 5 exercices correspondants de la compétence C5.</p>
+
+    <div class="level-selector">
+        <button class="level-btn active" data-level="debutant">Débutant (5 Cas)</button>
+        <button class="level-btn" data-level="intermediaire">Intermédiaire (5 Cas)</button>
+        <button class="level-btn" data-level="avance">Avancé (5 Cas)</button>
+    </div>
+
+    <div id="exercises-container">
+        </div>
+
+</div>
+
+<script>
+    const allStudies = [
+        // --- NIVEAU DÉBUTANT (5 CAS) - Connexion et requêtes simples ---
+        {
+            level: "debutant",
+            title: "Étude de Cas 1 : Établir la connexion JDBC",
+            criteria: "(Critères visés : Cr1 - Code de connexion, Cr5 - Libération des ressources)",
+            problem: "Écrivez le code minimum nécessaire pour établir une connexion JDBC à une base de données MySQL.<br> Utilisez une URL de connexion standard (ex: `jdbc:mysql://localhost:3306/ma_base`), 'root' comme utilisateur et 'password' comme mot de passe.<br> Gérez l'`SQLException` et assurez-vous de fermer la connexion en utilisant la technique `try-with-resources`.",
+            solution: `import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class TestConnexion {
+    // Cr1 : Définition des informations de connexion
+    private static final String URL = "jdbc:mysql://localhost:3306/ma_base";
+    private static final String USER = "root";
+    private static final String PASS = "password";
+
+    public static void main(String[] args) {
+        // Cr5 : Utilisation de try-with-resources pour la fermeture automatique
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {
+            
+            // Cr1 : Connexion établie
+            System.out.println("Connexion JDBC établie avec succès !");
+            
+        } catch (SQLException e) {
+            // Cr6 : Gestion de l'exception
+            System.err.println("Erreur de connexion : " + e.getMessage());
+        }
+        // La connexion est fermée automatiquement ici (Cr5)
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 2 : Exécuter une requête DML simple (INSERT)",
+            criteria: "(Critères visés : Cr2 - Requête SQL définie, Cr6 - Gestion des exceptions)",
+            problem: "En utilisant un objet `Statement`, écrivez le code pour exécuter une requête SQL d'insertion (INSERT) dans une table `Produits`.<br> La requête doit être définie directement en dur et insérer un produit (Nom: 'Clavier', Prix: 50.0).<br> Gérez l'`SQLException` et utilisez `executeUpdate()`.",
+            solution: `import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.SQLException;
+
+public class TestInsert {
+    // Simuler la connexion réussie (voir Cas 1 pour la connexion complète)
+    public static void main(String[] args) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+             // Statement est également AutoCloseable
+             Statement stmt = conn.createStatement()) { 
+            
+            // Cr2 : Définition de la requête SQL dans le code
+            String sql = "INSERT INTO Produits (Nom, Prix) VALUES ('Clavier', 50.0)";
+            
+            // Exécution de la requête DML
+            int lignesAffectees = stmt.executeUpdate(sql);
+            
+            System.out.println(lignesAffectees + " ligne(s) insérée(s).");
+            
+        } catch (SQLException e) {
+            // Cr6 : Gestion de l'exception
+            System.err.println("Erreur SQL : " + e.getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 3 : Exécuter une requête DML paramétrée (UPDATE)",
+            criteria: "(Critères visés : Cr3 - Requête SQL paramétrée, Cr6 - Gestion des exceptions)",
+            problem: "Utilisez un objet **`PreparedStatement`** pour mettre à jour le prix d'un produit. <br>La requête SQL doit utiliser un marqueur de position (`?`) pour le nouveau prix (120.0) et l'ID du produit (10). <br>Assurez-vous d'utiliser la méthode `setDouble()` puis `setInt()` pour lier les valeurs .",
+            solution: `import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class TestUpdateParametre {
+    public static void main(String[] args) {
+        // Paramètres de mise à jour
+        double nouveauPrix = 120.0;
+        int idProduit = 10;
+        
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+             // Création du PreparedStatement (AutoCloseable)
+             PreparedStatement pstmt = conn.prepareStatement("UPDATE Produits SET Prix = ? WHERE ID = ?")) { 
+            
+            // Cr3 : Liaison des paramètres
+            pstmt.setDouble(1, nouveauPrix); // Le premier '?'
+            pstmt.setInt(2, idProduit);     // Le deuxième '?'
+            
+            // Exécution de la mise à jour
+            int lignesAffectees = pstmt.executeUpdate();
+            
+            System.out.println(lignesAffectees + " ligne(s) mise(s) à jour.");
+            
+        } catch (SQLException e) {
+            // Cr6 : Gestion de l'exception
+            System.err.println("Erreur SQL : " + e.getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 4 : Lire les résultats d'une requête (SELECT)",
+            criteria: "(Critères visés : Cr4 - Traitement ResultSet avec next(), Cr6 - Gestion des exceptions)",
+            problem: "Exécutez une requête `SELECT * FROM Produits` en utilisant `Statement` et `executeQuery()`. <br>Le `ResultSet` obtenu  doit être parcouru pour afficher chaque enregistrement. <br>Utilisez la méthode `getString()` pour le nom et `getDouble()` pour le prix, et itérez avec la méthode **`next()`** .",
+            solution: `import java.sql.*;
+
+public class TestSelect {
+    public static void main(String[] args) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+             Statement stmt = conn.createStatement();
+             // Cr4 : ResultSet est également AutoCloseable
+             ResultSet rs = stmt.executeQuery("SELECT Nom, Prix FROM Produits")) { 
+            
+            System.out.println("Liste des Produits :");
+            
+            // Cr4 : Itération sur les résultats
+            while (rs.next()) {
+                String nom = rs.getString("Nom");
+                double prix = rs.getDouble("Prix");
+                System.out.println(" - Nom: " + nom + ", Prix: " + prix + " €");
+            }
+            
+        } catch (SQLException e) {
+            // Cr6 : Gestion de l'exception
+            System.err.println("Erreur SQL : " + e.getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "debutant",
+            title: "Étude de Cas 5 : Requête SELECT avec PreparedStatement",
+            criteria: "(Critères visés : Cr3 - Requête paramétrée, Cr4 - Traitement ResultSet)",
+            problem: "Combinez l'utilisation de `PreparedStatement` et `ResultSet`. <br>Écrivez une requête pour sélectionner un seul produit par son ID (ex: 5). <br>Liez la valeur de l'ID, exécutez la requête, et affichez les détails du produit si `next()` retourne `true`.",
+            solution: `import java.sql.*;
+
+public class TestSelectParametre {
+    public static void main(String[] args) {
+        int idRecherche = 5;
+        String sql = "SELECT Nom, Prix FROM Produits WHERE ID = ?";
+        
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+             PreparedStatement pstmt = conn.prepareStatement(sql)) { 
+            
+            // Cr3 : Liaison de la valeur de l'ID
+            pstmt.setInt(1, idRecherche);
+            
+            // Exécution et récupération du ResultSet
+            try (ResultSet rs = pstmt.executeQuery()) {
+                
+                // Cr4 : Traitement du résultat (un seul enregistrement attendu)
+                if (rs.next()) {
+                    String nom = rs.getString("Nom");
+                    double prix = rs.getDouble("Prix");
+                    System.out.println("Produit trouvé (ID " + idRecherche + ") : Nom: " + nom + ", Prix: " + prix + " €");
+                } else {
+                    System.out.println("Aucun produit trouvé avec l'ID " + idRecherche);
+                }
+            } // Le ResultSet est fermé ici
+            
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL : " + e.getMessage());
+        }
+    }
+}`
+        },
+        
+        // --- NIVEAU INTERMÉDIAIRE (5 CAS) - Transactions et Contrôle des Résultats ---
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 6 : Traitement de ResultSet avec first() et last()",
+            criteria: "(Critère visé : Cr4 - Déplacement absolu dans le ResultSet)",
+            problem: "Après avoir exécuté un `SELECT` et obtenu un `ResultSet`, <br>utilisez la méthode **`last()`**  pour vous positionner sur le dernier enregistrement et afficher son nom. <br>Utilisez ensuite la méthode **`first()`**  pour vous positionner sur le premier enregistrement et afficher son prix. (Nécessite un Statement de type SCROLL_INSENSITIVE).",
+            solution: `import java.sql.*;
+
+public class TestResultSetScrolling {
+    public static void main(String[] args) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+             // Le Statement DOIT être créé avec la propriété de déplacement
+             Statement stmt = conn.createStatement(
+                 ResultSet.TYPE_SCROLL_INSENSITIVE, 
+                 ResultSet.CONCUR_READ_ONLY
+             );
+             ResultSet rs = stmt.executeQuery("SELECT Nom, Prix FROM Produits")) { 
+            
+            // Cr4 : Déplacement vers le dernier
+            if (rs.last()) {
+                System.out.println("Dernier produit : " + rs.getString("Nom"));
+            }
+            
+            // Cr4 : Déplacement vers le premier
+            if (rs.first()) {
+                System.out.println("Prix du premier produit : " + rs.getDouble("Prix") + " €");
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL : " + e.getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 7 : Traitement de ResultSet avec relative() et row()",
+            criteria: "(Critère visé : Cr4 - Déplacement relatif et positionnement)",
+            problem: "En partant du début d'un `ResultSet` (avec scrolling activé),<br> utilisez **`relative(2)`**  pour vous déplacer de 2 positions. <br>Affichez le numéro de ligne courant avec **`getRow()`**  et le nom du produit à cette position. <br>Assumez qu'il y a au moins 3 produits.",
+            solution: `import java.sql.*;
+
+public class TestResultSetRelative {
+    public static void main(String[] args) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+             ResultSet rs = stmt.executeQuery("SELECT Nom FROM Produits")) { 
+            
+            // Le curseur est AVANT la première ligne
+            
+            // Cr4 : Déplacement relatif de 2 positions (se place sur la 2e ligne)
+            if (rs.relative(2)) {
+                System.out.println("Déplacement relatif de 2 réussi.");
+                // Cr4 : Affichage de la position et de la valeur
+                System.out.println("Position actuelle : " + rs.getRow());
+                System.out.println("Produit à cette ligne : " + rs.getString("Nom"));
+            } else {
+                System.out.println("Déplacement relatif impossible (moins de 2 lignes ?).");
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL : " + e.getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 8 : Mise en œuvre d'une Transaction (Commit)",
+            criteria: "(Critères visés : Cr7 - Gestion des transactions (commit), Cr6 - Gestion des exceptions)",
+            problem: "Établissez une connexion et désactivez l'auto-commit.<br> Exécutez deux requêtes `UPDATE` successives.<br> Si les deux se terminent sans `SQLException`, appelez la méthode **`commit()`**  pour valider les changements.<br> Gérez l'exception requise.",
+            solution: `import java.sql.*;
+
+public class TestTransactionCommit {
+    public static void main(String[] args) {
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+            
+            // Cr7 : Désactivation de l'auto-commit
+            conn.setAutoCommit(false); 
+
+            try (Statement stmt = conn.createStatement()) {
+                
+                // Opération 1
+                stmt.executeUpdate("UPDATE Comptes SET Solde = Solde - 100 WHERE ID = 1");
+                System.out.println("Débit de 100 sur compte 1 OK.");
+                
+                // Opération 2
+                stmt.executeUpdate("UPDATE Comptes SET Solde = Solde + 100 WHERE ID = 2");
+                System.out.println("Crédit de 100 sur compte 2 OK.");
+                
+                // Cr7 : Validation de la transaction
+                conn.commit(); 
+                System.out.println("Transaction validée (COMMIT).");
+                
+            }
+        } catch (SQLException e) {
+            // Cr6 : Gestion de l'exception
+            System.err.println("Erreur SQL, annulation des changements : " + e.getMessage());
+            try {
+                if (conn != null) conn.rollback(); // Rollback en cas d'erreur
+            } catch (SQLException rollbackEx) {
+                System.err.println("Erreur lors du rollback : " + rollbackEx.getMessage());
+            }
+        } finally {
+            try {
+                if (conn != null) conn.close(); // Fermeture finale
+            } catch (SQLException closeEx) {}
+        }
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 9 : Mise en œuvre d'une Transaction (Rollback)",
+            criteria: "(Critères visés : Cr7 - Gestion des transactions (rollback), Cr6 - Gestion des exceptions)",
+            problem: "En reprenant le scénario de l'étude de cas 8, exécutez la première requête `UPDATE`.<br> Ensuite, simulez une erreur (en forçant le déclenchement d'une `SQLException`,<br> par exemple en tentant d'exécuter une requête SQL invalide) pour forcer l'appel de la méthode **`rollback()`**  dans le bloc `catch`.<br> Vérifiez que seule la première requête est annulée.",
+            solution: `import java.sql.*;
+
+public class TestTransactionRollback {
+    public static void main(String[] args) {
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+            conn.setAutoCommit(false); 
+
+            try (Statement stmt = conn.createStatement()) {
+                
+                // Opération 1 (sera annulée)
+                stmt.executeUpdate("UPDATE Comptes SET Solde = Solde + 50 WHERE ID = 3");
+                System.out.println("Crédit de 50 sur compte 3 OK.");
+                
+                // Opération 2 : Tentative d'exécution d'une requête invalide (simule l'échec)
+                stmt.executeUpdate("UPDATE table_non_existante SET Col = 1"); 
+                // Cette ligne lance une SQLException et passe au catch
+                
+                conn.commit(); // Non atteint
+                
+            }
+        } catch (SQLException e) {
+            // Cr6 : L'échec est capturé ici
+            System.err.println("Erreur SQL capturée : " + e.getMessage());
+            try {
+                if (conn != null) {
+                    // Cr7 : Annulation de l'Opération 1
+                    conn.rollback(); 
+                    System.out.println("Transaction annulée (ROLLBACK).");
+                }
+            } catch (SQLException rollbackEx) {
+                System.err.println("Erreur lors du rollback : " + rollbackEx.getMessage());
+            }
+        } finally {
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException closeEx) {}
+        }
+    }
+}`
+        },
+        {
+            level: "intermediaire",
+            title: "Étude de Cas 10 : Mapping d'un ResultSet vers un Objet Métier",
+            criteria: "(Critères visés : Cr4 - Traitement ResultSet, Cr1 - Vision professionnelle)",
+            problem: "Créez une classe Java `Utilisateur` (attributs `id`, `nom`).<br> Écrivez une méthode `chargerUtilisateur(int id)` qui exécute une requête `SELECT` par ID.<br> La méthode doit mapper les colonnes du `ResultSet` sur un nouvel objet `Utilisateur` et le retourner, <br>en utilisant `getInt()` et `getString()` .",
+            solution: `import java.sql.*;
+// Classe Utilisateur (Objet Métier)
+class Utilisateur {
+    int id;
+    String nom;
+    public Utilisateur(int id, String nom) {
+        this.id = id;
+        this.nom = nom;
+    }
+    @Override
+    public String toString() { return "ID: " + id + ", Nom: " + nom; }
+}
+
+public class TestMappingObjet {
+    // Cr1 : Méthode à visée professionnelle
+    public static Utilisateur chargerUtilisateur(int id) throws SQLException {
+        String sql = "SELECT ID, Nom FROM Utilisateurs WHERE ID = ?";
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ) { 
+            
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    // Cr4 : Mapping des colonnes vers l'objet
+                    int userId = rs.getInt("ID");
+                    String userNom = rs.getString("Nom");
+                    return new Utilisateur(userId, userNom);
+                }
+            }
+        }
+        return null;
+    }
+    
+    public static void main(String[] args) {
+        try {
+            Utilisateur u = chargerUtilisateur(1);
+            if (u != null) {
+                System.out.println("Utilisateur chargé : " + u);
+            } else {
+                System.out.println("Utilisateur non trouvé.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur de base de données : " + e.getMessage());
+        }
+    }
+}`
+        },
+
+        // --- NIVEAU AVANCÉ (5 CAS) - Gestion avancée des exceptions et Batch ---
+        {
+            level: "avance",
+            title: "Étude de Cas 11 : Gestion avancée de SQLException (getMessage et printStackTrace)",
+            criteria: "(Critère visé : Cr6 - Gestion des exceptions, getMessage et stackTrace)",
+            problem: "Dans un bloc `catch (SQLException e)`,<br> affichez trois informations clés de l'exception : le message d'erreur SQL (`getMessage`),<br> le code d'état SQL (`getSQLState`) <br>et le code d'erreur spécifique au fournisseur (`getErrorCode`) .",
+            solution: `import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.SQLException;
+
+public class TestSQLExceptionDetails {
+    public static void main(String[] args) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+             Statement stmt = conn.createStatement()) { 
+            
+            // Tentative d'exécution d'une requête qui échouera (ex: table inexistante)
+            stmt.executeUpdate("SELECT * FROM TABLE_INCONNUE"); 
+            
+        } catch (SQLException e) {
+            // Cr6 : Affichage des détails de l'erreur SQL
+            System.err.println("--- Détails de la SQLException ---");
+            System.err.println("Message : " + e.getMessage()); 
+            System.err.println("SQL State : " + e.getSQLState()); 
+            System.err.println("Error Code (Vendor) : " + e.getErrorCode()); 
+            
+            // Utile pour le débogage mais à éviter en production pour l'utilisateur final
+            e.printStackTrace(); 
+        }
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 12 : Déclenchement d'une exception applicative personnalisée",
+            criteria: "(Critères visés : Cr6 - Déclenchement d'exceptions applicatives, Cr2 - Requête SQL)",
+            problem: "Créez une exception applicative non vérifiée `DaoException extends RuntimeException`. <br>Dans une méthode de persistance, capturez l'`SQLException` <br>et relancez-la comme une `DaoException` (pour isoler le code appelant des détails JDBC) en chaînant la cause racine.",
+            solution: `import java.sql.SQLException;
+
+// Exception Applicative
+class DaoException extends RuntimeException {
+    public DaoException(String message, Throwable cause) {
+        super(message, cause); // Chaînage de l'exception
+    }
+}
+
+class UserDao {
+    // Simule une opération qui échoue
+    public void deleteUser(int id) { 
+        try {
+            // Cr2 : Simule l'exécution d'une requête SQL
+            if (id == 99) {
+                 // Simule une erreur de base de données
+                 throw new SQLException("Violation de clé étrangère (FK)");
+            }
+            System.out.println("Utilisateur " + id + " supprimé.");
+        } catch (SQLException e) {
+            // Cr6 : Capture de la SQLException et relance comme DaoException
+            throw new DaoException("Impossible de supprimer l'utilisateur " + id, e);
+        }
+    }
+}
+
+public class TestExceptionApplicative {
+    public static void main(String[] args) {
+        UserDao dao = new UserDao();
+        try {
+            dao.deleteUser(99); // Déclenche l'erreur simulée
+        } catch (DaoException e) {
+            System.err.println("Erreur applicative capturée : " + e.getMessage());
+            System.err.println("Cause JDBC initiale : " + e.getCause().getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 13 : Exécution de requêtes par lots (Batch Processing)",
+            criteria: "(Critères visés : Cr2 - Requêtes SQL, Cr3 - PreparedStatement, Cr4 - Traitement en lot)",
+            problem: "Utilisez un `PreparedStatement` pour insérer plusieurs enregistrements en mode **Batch** . <br>Ajoutez deux requêtes d'insertion à l'aide de `addBatch()` et exécutez-les toutes ensemble avec `executeBatch()`. <br>Affichez le tableau des résultats (nombre de lignes affectées par chaque requête).",
+            solution: `import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class TestBatchProcessing {
+    public static void main(String[] args) {
+        String sql = "INSERT INTO Logs (Message) VALUES (?)";
+        
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+             // Création du PreparedStatement
+             PreparedStatement pstmt = conn.prepareStatement(sql)) { 
+            
+            // Cr2, Cr3 : Ajout de la première requête au lot
+            pstmt.setString(1, "Log d'événement 1");
+            pstmt.addBatch(); 
+            
+            // Cr2, Cr3 : Ajout de la deuxième requête au lot
+            pstmt.setString(1, "Log d'événement 2");
+            pstmt.addBatch(); 
+            
+            // Cr4 : Exécution du lot
+            int[] resultats = pstmt.executeBatch();
+            
+            System.out.println("Traitement Batch terminé.");
+            System.out.println("Résultats (lignes affectées par requête) : ");
+            for (int res : resultats) {
+                System.out.println("- " + res);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL lors du Batch : " + e.getMessage());
+        }
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 14 : Mise en œuvre de Savepoints dans une transaction",
+            criteria: "(Critères visés : Cr7 - Transactions avec Savepoint, Cr6 - Gestion d'erreurs)",
+            problem: "Dans une transaction sans auto-commit, <br>exécutez la première requête `UPDATE`.<br> Créez un **`Savepoint`** .<br> Exécutez la deuxième requête.<br> Si la deuxième échoue (simulez l'erreur), utilisez la méthode **`rollback(Savepoint)`**  pour annuler uniquement la deuxième requête tout en validant la première.",
+            solution: `import java.sql.*;
+
+public class TestSavepoint {
+    public static void main(String[] args) {
+        Connection conn = null;
+        Savepoint sp1 = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+            conn.setAutoCommit(false); 
+
+            try (Statement stmt = conn.createStatement()) {
+                
+                // Opération 1 (sera conservée)
+                stmt.executeUpdate("UPDATE Inventaire SET Stock = Stock - 1 WHERE ID = 1");
+                System.out.println("Article 1 déstocké.");
+                
+                // Cr7 : Création d'un point de sauvegarde
+                sp1 = conn.setSavepoint("Savepoint_A"); 
+                System.out.println("Savepoint 'Savepoint_A' créé.");
+
+                // Opération 2 (va échouer)
+                stmt.executeUpdate("UPDATE Inventaire SET Stock = Stock - 1 WHERE ID = 999"); // ID inexistant
+                System.out.println("Article 999 déstocké (non atteint).");
+                
+                conn.commit(); // Non atteint
+                
+            }
+        } catch (SQLException e) {
+            // Cr6 : L'échec est capturé ici
+            System.err.println("Erreur SQL capturée : " + e.getMessage());
+            try {
+                if (conn != null && sp1 != null) {
+                    // Cr7 : Annuler jusqu'au Savepoint (Opération 1 est conservée)
+                    conn.rollback(sp1); 
+                    System.out.println("Rollback effectué jusqu'au Savepoint 'Savepoint_A'.");
+                    // Validation des changements avant le Savepoint
+                    conn.commit(); 
+                    System.out.println("Opération 1 validée.");
+                }
+            } catch (SQLException rollbackEx) {
+                System.err.println("Erreur lors du rollback : " + rollbackEx.getMessage());
+            }
+        } finally {
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException closeEx) {}
+        }
+    }
+}`
+        },
+        {
+            level: "avance",
+            title: "Étude de Cas 15 : Récupération d'un objet généré après INSERT (Generated Keys)",
+            criteria: "(Critères visés : Cr2 - Requête SQL, Cr4 - Traitement ResultSet, Cr1 - Visée professionnelle)",
+            problem: "Exécutez une requête `INSERT` pour un nouveau client. <br>Utilisez l'option `Statement.RETURN_GENERATED_KEYS` lors de l'exécution pour récupérer l'ID généré automatiquement .<br> Affichez l'ID de la nouvelle ligne insérée .",
+            solution: `import java.sql.*;
+
+public class TestGeneratedKeys {
+    public static void main(String[] args) {
+        String clientNom = "Durand";
+        String sql = "INSERT INTO Clients (Nom) VALUES (?)";
+        
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://...", "root", "password");
+             // Cr3 : Le PreparedStatement est créé pour récupérer les clés générées
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) { 
+            
+            // Cr2 : Exécution de l'insertion
+            pstmt.setString(1, clientNom);
+            int lignesAffectees = pstmt.executeUpdate();
+            
+            if (lignesAffectees > 0) {
+                // Cr4 : Récupération du ResultSet contenant la clé générée
+                try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        // Cr4, Cr1 : L'ID est généralement la première colonne du ResultSet
+                        long idGenere = rs.getLong(1); 
+                        System.out.println("Insertion réussie. Nouvel ID de client : " + idGenere);
+                    }
+                }
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL : " + e.getMessage());
+        }
+    }
+}`
+        }
+    ];
+
+    const exercisesContainer = document.getElementById('exercises-container');
+    const levelButtons = document.querySelectorAll('.level-btn');
+    let currentLevel = 'debutant';
+
+    /**
+     * Rend les exercices pour un niveau donné.
+     * @param {string} level 
+     */
+    function renderExercises(level) {
+        exercisesContainer.innerHTML = '';
+        const filteredStudies = allStudies.filter(study => study.level === level);
+
+        filteredStudies.forEach((study, index) => {
+            const card = document.createElement('div');
+            // Mise à jour des classes CSS pour C5
+            card.className = `exercise-card level-${level}`;
+            
+            // Le numéro de cas correspond à son index global (1 à 15) pour une référence simple
+            const caseNumber = allStudies.indexOf(study) + 1;
+
+            // Utilisation des Template Literals pour générer le HTML de la carte
+            card.innerHTML = `
+                <h3>${study.title} (Cas ${caseNumber}/15 - C5)</h3>
+                <p class="criteria">${study.criteria}</p>
+                <p><strong>Problème :</strong> ${study.problem}</p>
+                
+                <button class="solution-toggle">Afficher la solution Java</button>
+                <div class="solution-content hidden">
+                    <pre><code class="language-java">${study.solution.trim()}</code></pre>
+                </div>
+            `;
+
+            const toggleButton = card.querySelector('.solution-toggle');
+            const solutionContent = card.querySelector('.solution-content');
+            
+            // Logique de bascule pour afficher/masquer la solution
+            toggleButton.addEventListener('click', () => {
+                const isHidden = solutionContent.classList.toggle('hidden');
+                
+                // Mettre à jour le texte du bouton en fonction de l'état
+                if (isHidden) {
+                    toggleButton.textContent = 'Afficher la solution Java';
+                } else {
+                    toggleButton.textContent = 'Masquer la solution';
+                }
+            });
+
+            exercisesContainer.appendChild(card);
+        });
+    }
+
+    /**
+     * Change le niveau affiché et met à jour les boutons.
+     * @param {string} level 
+     */
+    function changeLevel(level) {
+        currentLevel = level;
+        
+        // Mise à jour de l'état des boutons
+        levelButtons.forEach(btn => {
+            if (btn.dataset.level === level) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        renderExercises(level);
+    }
+
+    // --- Initialisation ---
+    // Attacher les événements aux boutons
+    levelButtons.forEach(btn => {
+        btn.addEventListener('click', () => changeLevel(btn.dataset.level));
+    });
+
+    // Rendu initial (Débutant par défaut)
+    changeLevel(currentLevel);
+
+</script>
+</body>
+</html>
