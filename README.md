@@ -120,22 +120,6 @@ Le contenu est organisé selon 5 compétences progressives :
 - [ ] Projets pratiques intégratifs
 - [ ] Certification des compétences acquises
 
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! Pour ajouter du contenu :
-
-1. Forkez le projet
-2. Créez une branche par compétence (`git checkout -b feature/C3-exercice-lambda`)
-3. Respectez la structure et le format des exercices/quizz existants
-4. Committez vos changements avec un message clair
-5. Ouvrez une Pull Request
-
-### Format de contribution
-- Les quizz doivent être interactifs et auto-correctifs
-- Les exercices doivent inclure des tests de validation
-- Les corrections doivent être commentées et pédagogiques
-- Indiquez clairement la compétence ciblée (C1 à C5)
-
 ## 📋 Prérequis
 
 - **Java JDK 11 ou supérieur**
@@ -152,7 +136,7 @@ Les contributions sont les bienvenues ! Pour ajouter du contenu :
 
 ## 📜 Licence
 
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+ Voir le fichier `LICENSE` pour plus de détails.
 
 ## 💬 Contact & Support
 
